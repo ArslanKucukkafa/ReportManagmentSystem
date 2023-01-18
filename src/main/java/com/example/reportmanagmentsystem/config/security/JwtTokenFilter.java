@@ -45,7 +45,7 @@ public class JwtTokenFilter  extends OncePerRequestFilter {
             logger.warn("Token Must be start With Bearer. JWT Token does not begin with Bearer String");
         }
         if (laborant_id != null && jwtToken!=null && SecurityContextHolder.getContext().getAuthentication() == null){
-            UserDetails userDetails = laborantService.loadUserByUsername(laborant_id);
+            UserDetails userDetails = laborantService.loadUserByUsername(Long.valueOf(laborant_id));
             if (jwtTokenUtil.tokenValidate(jwtToken)) {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null,
                         userDetails.getAuthorities());

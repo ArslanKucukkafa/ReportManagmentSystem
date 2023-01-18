@@ -16,7 +16,6 @@ import java.util.Arrays;
 @EnableWebSecurity
 @Configuration
 public class WebSecurity {
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity)throws Exception{
         httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/api/v1/laboratories/hello").hasRole("USER");

@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ErrorResponse extends Response{
-    private String message;
-    private boolean status;
+    public String message;
+    public boolean status;
 }
