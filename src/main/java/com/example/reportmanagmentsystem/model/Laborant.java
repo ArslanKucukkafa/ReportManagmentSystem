@@ -38,15 +38,12 @@ public class Laborant {
     private String password;
 
     //CascadeType:.all bir data silindiginde bununla ilişkili olan tüm verilerin silinmesini saglar
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "laborant_roles",
-            joinColumns = @JoinColumn(name = "laborant_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<Role> roles = new HashSet<>();
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "role")
+    private Role role;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
             name = "laborant_reports",
             joinColumns = @JoinColumn(name = "laborant_id"),

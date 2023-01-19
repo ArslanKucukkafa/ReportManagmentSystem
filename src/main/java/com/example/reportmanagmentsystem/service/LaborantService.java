@@ -12,8 +12,11 @@ import com.example.reportmanagmentsystem.model.response.LoginResponse;
 import com.example.reportmanagmentsystem.repository.LaborantRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -28,11 +31,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class LaborantService implements UserDetailsService {
 
-@Autowired
 private final LaborantRepository laborantRepository;
-private final BCryptPasswordEncoder passwordEncoder;
 private final AuthenticationManager authenticationManager;
-
 private final JwtTokenUtil jwtTokenUtil;
 
 @Autowired
@@ -46,14 +46,14 @@ public void registerLaborant(LaborantRegisterDto registerDto){
 public Response loginLaborant(LaborantLoginDto loginDto){
    final Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getLaborant_id(),loginDto.getPassword()));
     // TODO WARNING
-    // TODO Password encoded edilip control edilecek. Eksik
+    // TODO Password encoded edilip control edilecek. Eksik  
     Optional<Laborant> isConfirmed = laborantRepository.findByLaborantId(loginDto.getLaborant_id());
     if(isConfirmed.isPresent()){
         return new ErrorResponse("Invalid password or laborant ıd",false);
     }
     else {
         String token = jwtTokenUtil.generateToken(authentication);
-        return new LoginResponse(token);
+        return LoginResponse.builder().token(token).build();
     }
 }
 

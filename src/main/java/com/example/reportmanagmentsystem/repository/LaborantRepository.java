@@ -8,6 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface LaborantRepository extends JpaRepository<Laborant,Integer> {
-
     Optional<Laborant> findByLaborantId(Long laborant_id);
 }

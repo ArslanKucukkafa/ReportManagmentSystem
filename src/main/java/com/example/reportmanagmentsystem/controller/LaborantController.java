@@ -2,7 +2,6 @@ package com.example.reportmanagmentsystem.controller;
 
 import com.example.reportmanagmentsystem.model.dto.LaborantLoginDto;
 import com.example.reportmanagmentsystem.model.dto.LaborantRegisterDto;
-import com.example.reportmanagmentsystem.model.response.LoginResponse;
 import com.example.reportmanagmentsystem.model.response.Response;
 import com.example.reportmanagmentsystem.service.LaborantService;
 import org.springframework.beans.factory.annotation.Autowired;

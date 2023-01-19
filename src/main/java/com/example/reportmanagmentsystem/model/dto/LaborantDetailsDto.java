@@ -22,12 +22,10 @@ public class LaborantDetailsDto implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Set <Role> roles = laborant.getRoles();
+        Role roles = laborant.getRole();
         List<SimpleGrantedAuthority> grantedAuthorities = new ArrayList<>();
+        grantedAuthorities.add(new SimpleGrantedAuthority(roles.getRoleName()));
 
-        for (Role role : roles) {
-            grantedAuthorities.add(new SimpleGrantedAuthority(role.getRoleName()));
-        }
         return grantedAuthorities;
     }
 
