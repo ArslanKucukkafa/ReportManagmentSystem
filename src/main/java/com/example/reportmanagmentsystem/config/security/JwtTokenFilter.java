@@ -1,6 +1,6 @@
 package com.example.reportmanagmentsystem.config.security;
 
-import com.example.reportmanagmentsystem.service.LaborantService;
+import com.example.reportmanagmentsystem.service.LaborantServiceImpl;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,7 +23,7 @@ public class JwtTokenFilter  extends OncePerRequestFilter {
     private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
-    private LaborantService laborantService;
+    private LaborantServiceImpl laborantService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
