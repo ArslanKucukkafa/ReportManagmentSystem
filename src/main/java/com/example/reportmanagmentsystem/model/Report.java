@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -16,6 +17,10 @@ import javax.persistence.*;
 @Entity
 @Table(name = "report")
 public class Report {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "report_id")
+    private Long reportId;
 
     @Column(name = "patient_name")
     private String ad;
@@ -23,10 +28,8 @@ public class Report {
     @Column(name="patient_surname")
     private String soyad;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "report_id")
-    private Long reportId;
+    @Column(name = "patient_identity_no")
+    private String patient_identity_no;
 
     @Column(name = "dfn_title")
     private String dfnTitle;
@@ -37,7 +40,11 @@ public class Report {
     @Column(name = "dfn_img_path")
     private String dfnImgPath;
 
+    //TODO  Token parse decode edildikten sonra elde edilen Laborant id Report nesnesine set edilecek
     @ManyToOne
     @JoinColumn(name = "laborant_id")
-    private Laborant laborantId;
+    private Laborant laborantid;
+
+    @Column(name = "create_date")
+    private LocalDateTime create_date;
 }

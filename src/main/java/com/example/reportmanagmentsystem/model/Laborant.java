@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -31,22 +32,25 @@ public class Laborant {
     @Column(name = "laborant_id" )
     private Long laborantId;
 
+    @Column(name = "is_Account_Confirmed" )
+    private boolean isAccountConfirmed;
+
     @Column(name = "password")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     //CascadeType: all bir data silindiginde bununla ilişkili olan tüm verilerin silinmesini saglar
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "role")
+    @ManyToMany (cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JoinTable(
+            name = "laborant_roles",
+            joinColumns = @JoinColumn(name = "laborant_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
     private Set<Role> roles = new HashSet<>();
 
-
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "laborant_reports",
-            joinColumns = @JoinColumn(name = "laborant_id"),
-            inverseJoinColumns = @JoinColumn(name = "report_id")
-    )
-    private Set<Report> reports = new HashSet<>();
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private List<Report> reports;
 
 }

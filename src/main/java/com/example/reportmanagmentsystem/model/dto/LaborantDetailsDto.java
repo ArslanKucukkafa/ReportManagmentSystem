@@ -16,7 +16,6 @@ public class LaborantDetailsDto implements UserDetails {
         this.laborant = laborant;
     }
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<Role> roles = laborant.getRoles();

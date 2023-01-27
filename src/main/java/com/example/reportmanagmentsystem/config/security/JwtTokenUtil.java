@@ -41,7 +41,6 @@ public class JwtTokenUtil implements Serializable {
     }
 
 public String getUsernameFromToken(String token){
-
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
 }
 public boolean tokenValidate(String token){
@@ -54,6 +53,6 @@ public boolean tokenValidate(String token){
 }
 
     //TODO Jwt token filter yazılcak
-    //TODO Service login token create edilip yolllanacak
+    //TODO Service login token create edilip yollanacak
 
 }
