@@ -1,11 +1,11 @@
 package com.example.reportmanagmentsystem.config.security;
 
-import com.example.reportmanagmentsystem.service.LaborantServiceImpl;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -23,7 +23,7 @@ public class JwtTokenFilter  extends OncePerRequestFilter {
     private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
-    private LaborantServiceImpl laborantService;
+    private UserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -44,8 +44,10 @@ public class JwtTokenFilter  extends OncePerRequestFilter {
         }else{
             logger.warn("Token Must be start With Bearer. JWT Token does not begin with Bearer String");
         }
+        System.out.println(laborant_id+" "+jwtToken);
         if (laborant_id != null && jwtToken!=null && SecurityContextHolder.getContext().getAuthentication() == null){
-            UserDetails userDetails = laborantService.loadUserByUsername(Long.valueOf(laborant_id));
+            System.out.println("USER DETAİLDS SERVİCE İS WORK İN TOKEN FİLTER");
+            UserDetails userDetails = userDetailsService.loadUserByUsername(laborant_id);
             if (jwtTokenUtil.tokenValidate(jwtToken)) {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null,
                         userDetails.getAuthorities());
@@ -53,6 +55,9 @@ public class JwtTokenFilter  extends OncePerRequestFilter {
                         .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
+        }
+        else{
+            System.out.println("else working security");
         }
         filterChain.doFilter(request, response);
     }

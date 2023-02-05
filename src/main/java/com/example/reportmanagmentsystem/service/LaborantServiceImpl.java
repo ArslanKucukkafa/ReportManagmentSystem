@@ -13,10 +13,13 @@ import com.example.reportmanagmentsystem.repository.LaborantRepository;
 import com.example.reportmanagmentsystem.repository.RoleRepository;
 import com.example.reportmanagmentsystem.service.interfaces.LaborantService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,12 +31,15 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class LaborantServiceImpl implements UserDetailsService , LaborantService {
+public class LaborantServiceImpl implements  LaborantService {
 
+private final Logger logger = LoggerFactory.getLogger(LaborantServiceImpl.class);
+@Autowired
 private final LaborantRepository laborantRepository;
 private final RoleRepository roleRepository;
 private final AuthenticationManager authenticationManager;
 private final JwtTokenUtil jwtTokenUtil;
+
 
     @Autowired
     private PasswordEncoder encoder;
@@ -48,29 +54,23 @@ public void registerLaborant(LaborantRegisterDto registerDto){
     laborantRepository.save(laborant);
     }
 @Override
-public Response loginLaborant(LaborantLoginDto loginDto){
-    final Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getLaborant_id(),loginDto.getPassword()));
-    System.out.println(authentication);
+public Response loginLaborant(LaborantLoginDto loginDto) throws AuthenticationException {
+
+    System.out.println("Login laborant Service ");
+
+
+    Authentication  authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getLaborant_id(),loginDto.getPassword()));
+
+    System.out.println("Login laborant Service is ---");
     // TODO WARNING
     // TODO Password encoded edilip control edilecek. Eksik  
     Optional<Laborant> isConfirmed = laborantRepository.findByLaborantId(loginDto.getLaborant_id());
+    System.out.println(isConfirmed.isPresent()+"  "+isConfirmed);
     if(isConfirmed.isPresent()){
-        return new ErrorResponse("Invalid password or laborant ıd",false);
-    }
-    else {
         String token = jwtTokenUtil.generateToken(authentication);
         return LoginResponse.builder().token(token).build();
     }
-}
-
-public UserDetails loadUserByUsername(Long laborant_id) throws UsernameNotFoundException {
-        Laborant laborant =laborantRepository.findByLaborantId(laborant_id).orElseThrow(()-> new UsernameNotFoundException("User not found with laborant_id: "+laborant_id));
-        return new LaborantDetailsDto(laborant);
+    else {
+        return new ErrorResponse("Invalid password or laborant ıd",false);}
     }
-
-    @Override
-public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return null;
-    }
-//public Response saveReport(ReportSaveDto reportSaveDto){}
 }

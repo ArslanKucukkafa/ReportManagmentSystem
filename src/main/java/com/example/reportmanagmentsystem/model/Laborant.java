@@ -30,10 +30,10 @@ public class Laborant {
     private String soyad;
 
     @Column(name = "laborant_id" )
-    private Long laborantId;
+    private String laborantId;
 
-    @Column(name = "is_Account_Confirmed" )
-    private boolean isAccountConfirmed;
+    @Column(name = "is_enabled" )
+    private boolean isEnabled;
 
     @Column(name = "password")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

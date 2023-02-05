@@ -14,7 +14,7 @@ public class LaborantRegisterDto {
 
     private String ad;
     private String soyad;
-    private Long laborant_id;
+    private String laborant_id;
     private String password;
 
     public Laborant registerLaborantDto(LaborantRegisterDto laborantregisterDto){

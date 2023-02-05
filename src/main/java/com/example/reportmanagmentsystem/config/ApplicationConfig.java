@@ -1,6 +1,7 @@
 package com.example.reportmanagmentsystem.config;
 
 import com.example.reportmanagmentsystem.repository.LaborantRepository;
+import com.example.reportmanagmentsystem.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,8 +27,7 @@ public class ApplicationConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> (UserDetails) repository.findByLaborantId(Long.valueOf(username))
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return new UserDetailsServiceImpl();
     }
 
     @Bean
