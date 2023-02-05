@@ -20,6 +20,7 @@ public class LaborantDetailsDto implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         System.out.println(" GrantedAuthority is working");
         Set<Role> roles = laborant.getRoles();
+        System.out.println(roles);
         List<SimpleGrantedAuthority> grantedAuthorities = new ArrayList<>();
         for (Role role : roles) {
             grantedAuthorities.add(new SimpleGrantedAuthority(role.getRoleName()));

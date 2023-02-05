@@ -40,7 +40,7 @@ public class Laborant {
     private String password;
 
     //CascadeType: all bir data silindiginde bununla ilişkili olan tüm verilerin silinmesini saglar
-    @ManyToMany (cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany (cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @JoinTable(
             name = "laborant_roles",
