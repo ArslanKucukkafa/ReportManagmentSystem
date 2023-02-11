@@ -2,6 +2,8 @@ package com.example.reportmanagmentsystem.controller;
 
 import com.example.reportmanagmentsystem.model.dto.LaborantLoginDto;
 import com.example.reportmanagmentsystem.model.dto.LaborantRegisterDto;
+import com.example.reportmanagmentsystem.model.dto.ReportSaveDto;
+import com.example.reportmanagmentsystem.model.response.LoginResponse;
 import com.example.reportmanagmentsystem.model.response.Response;
 import com.example.reportmanagmentsystem.service.LaborantServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +30,39 @@ public class LaborantController {
        return laborantService.loginLaborant(loginDto);
     }
 
+    @PostMapping("/saveReport")
+    public Response saveReport(@RequestBody ReportSaveDto reportSaveDto){
+        return  laborantService.saveReport(reportSaveDto);
+    }
+
+    @PutMapping ("/updateReport")
+    public Response updateReport(){
+        return new LoginResponse();
+    }
+
+    @PostMapping("/deleteReport")
+    public Response deleteReport(){
+        return new LoginResponse();
+    }
+
+    @GetMapping("/getAllReports")
+    public Response getAllReports(){
+        return new LoginResponse();
+    }
+
+    @GetMapping("/getPatientReport")
+    public Response getPatinetReports(){
+        return new Response();
+    }
+
 
     @GetMapping("/hello")
     public String hello(){
         return "Hello";
+    }
+
+    @GetMapping("/currentUser")
+    public Response currentUser(){
+        return laborantService.currenUser();
     }
 }

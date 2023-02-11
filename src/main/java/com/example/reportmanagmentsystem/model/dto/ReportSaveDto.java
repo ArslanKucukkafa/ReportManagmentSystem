@@ -16,11 +16,12 @@ public class ReportSaveDto {
     private String dfnDetails;
     private String dfnImgPath;
 
-    public Report saveReportDto(ReportSaveDto reportDto, Laborant laborant){
+    public Report saveReportDto(ReportSaveDto reportDto){
         Report report = new Report();
+        Laborant laborant = new Laborant();
         report.setAd(reportDto.getPatient_firstname());
         report.setSoyad(reportDto.getPatient_lastname());
-        report.setLaborantid(laborant);
+        report.setLaborant(laborant);
         return report;
     }
 }

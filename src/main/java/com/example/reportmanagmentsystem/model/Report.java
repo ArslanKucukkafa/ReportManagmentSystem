@@ -43,7 +43,7 @@ public class Report {
     //TODO  Token parse decode edildikten sonra elde edilen Laborant id Report nesnesine set edilecek
     @ManyToOne
     @JoinColumn(name = "laborant_id")
-    private Laborant laborantid;
+    private Laborant laborant;
 
     @Column(name = "create_date")
     private LocalDateTime create_date;

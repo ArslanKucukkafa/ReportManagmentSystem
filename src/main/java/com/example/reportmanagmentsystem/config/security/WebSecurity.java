@@ -4,12 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -22,11 +20,14 @@ public class WebSecurity {
 @Autowired
 private final AuthenticationProvider authenticationProvider;
 
+/*.antMatchers(HttpMethod.GET,"/api/v1/laboratories/hello")
+                .hasRole("LABORANT")*/
 @Autowired
 private JwtTokenFilter jwtTokenFilter;
     private static final String[] LaborantControllerEndpoints = {
             "/api/v1/laboratories/login",
             "/api/v1/laboratories/save",
+            "/api/v1/laboratories/hello",
             "/v2/api-docs",
             "/swagger-resources",
             "/swagger-resources/**",
@@ -48,8 +49,6 @@ private JwtTokenFilter jwtTokenFilter;
                 .authorizeHttpRequests()
                 .antMatchers(LaborantControllerEndpoints)
                 .permitAll()
-                .antMatchers(HttpMethod.GET,"/api/v1/laboratories/hello")
-                .hasAnyRole("LABORANT")
                 .anyRequest()
                 .authenticated()
                 .and()

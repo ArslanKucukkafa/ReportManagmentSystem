@@ -2,6 +2,7 @@ package com.example.reportmanagmentsystem.controller;
 
 import com.example.reportmanagmentsystem.model.Laborant;
 import com.example.reportmanagmentsystem.model.dto.RoleDto;
+import com.example.reportmanagmentsystem.model.response.LoginResponse;
 import com.example.reportmanagmentsystem.model.response.Response;
 import com.example.reportmanagmentsystem.service.AdminServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,10 @@ public class AdminController {
     @PutMapping("/update/roleLaborant")
     public Response update(Laborant laborant){return adminService.putRoleToLaborant(laborant);}
 
+    @GetMapping("/getAllUsers")
+    public Response getAllUsers(){
+        return new LoginResponse();
+    }
     @GetMapping("/hello")
     public String HelloAdmin(){
         return "Merhaba Admin";

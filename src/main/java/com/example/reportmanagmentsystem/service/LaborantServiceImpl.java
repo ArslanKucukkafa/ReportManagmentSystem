@@ -6,10 +6,13 @@ import com.example.reportmanagmentsystem.model.Role;
 import com.example.reportmanagmentsystem.model.dto.LaborantDetailsDto;
 import com.example.reportmanagmentsystem.model.dto.LaborantLoginDto;
 import com.example.reportmanagmentsystem.model.dto.LaborantRegisterDto;
+import com.example.reportmanagmentsystem.model.dto.ReportSaveDto;
 import com.example.reportmanagmentsystem.model.response.ErrorResponse;
 import com.example.reportmanagmentsystem.model.response.LoginResponse;
 import com.example.reportmanagmentsystem.model.response.Response;
+import com.example.reportmanagmentsystem.model.response.SuccesResponse;
 import com.example.reportmanagmentsystem.repository.LaborantRepository;
+import com.example.reportmanagmentsystem.repository.ReportRepository;
 import com.example.reportmanagmentsystem.repository.RoleRepository;
 import com.example.reportmanagmentsystem.service.interfaces.LaborantService;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +40,8 @@ private final Logger logger = LoggerFactory.getLogger(LaborantServiceImpl.class)
 @Autowired
 private final LaborantRepository laborantRepository;
 private final RoleRepository roleRepository;
+
+private final ReportRepository reportRepository;
 private final AuthenticationManager authenticationManager;
 private final JwtTokenUtil jwtTokenUtil;
 
@@ -72,5 +77,15 @@ public Response loginLaborant(LaborantLoginDto loginDto) throws AuthenticationEx
     }
     else {
         return new ErrorResponse("Invalid password or laborant ıd",false);}
+    }
+
+    public Response saveReport(ReportSaveDto reportSaveDto){
+        reportRepository.save(reportSaveDto.saveReportDto(reportSaveDto));
+        return new SuccesResponse("Report successfullf saved",true);
+    }
+
+    public Response currenUser(){
+    Laborant laborant = new Laborant();
+        return new SuccesResponse(laborant.getAd(),true);
     }
 }
