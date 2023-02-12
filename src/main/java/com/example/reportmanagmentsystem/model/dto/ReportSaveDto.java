@@ -4,6 +4,10 @@ import com.example.reportmanagmentsystem.model.Laborant;
 import com.example.reportmanagmentsystem.model.Report;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Optional;
 
 @Getter
 @Setter
@@ -16,12 +20,20 @@ public class ReportSaveDto {
     private String dfnDetails;
     private String dfnImgPath;
 
-    public Report saveReportDto(ReportSaveDto reportDto){
+    public String getPrincipal(){
+        String userName = null;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            userName = ((UserDetails)principal).getUsername();
+        }
+        return userName;
+    }
+
+    public Report saveReportDto(ReportSaveDto reportDto, Optional<Laborant> laborant){
         Report report = new Report();
-        Laborant laborant = new Laborant();
         report.setAd(reportDto.getPatient_firstname());
         report.setSoyad(reportDto.getPatient_lastname());
-        report.setLaborant(laborant);
+        report.setLaborant(laborant.get());
         return report;
     }
 }

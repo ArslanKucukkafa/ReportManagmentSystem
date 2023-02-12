@@ -3,7 +3,6 @@ package com.example.reportmanagmentsystem.service;
 import com.example.reportmanagmentsystem.config.security.JwtTokenUtil;
 import com.example.reportmanagmentsystem.model.Laborant;
 import com.example.reportmanagmentsystem.model.Role;
-import com.example.reportmanagmentsystem.model.dto.LaborantDetailsDto;
 import com.example.reportmanagmentsystem.model.dto.LaborantLoginDto;
 import com.example.reportmanagmentsystem.model.dto.LaborantRegisterDto;
 import com.example.reportmanagmentsystem.model.dto.ReportSaveDto;
@@ -23,9 +22,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -60,17 +58,8 @@ public void registerLaborant(LaborantRegisterDto registerDto){
     }
 @Override
 public Response loginLaborant(LaborantLoginDto loginDto) throws AuthenticationException {
-
-    System.out.println("Login laborant Service ");
-
-
     Authentication  authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getLaborant_id(),loginDto.getPassword()));
-
-    System.out.println("Login laborant Service is ---");
-    // TODO WARNING
-    // TODO Password encoded edilip control edilecek. Eksik  
     Optional<Laborant> isConfirmed = laborantRepository.findByLaborantId(loginDto.getLaborant_id());
-    System.out.println(isConfirmed.isPresent()+"  "+isConfirmed);
     if(isConfirmed.isPresent()){
         String token = jwtTokenUtil.generateToken(authentication);
         return LoginResponse.builder().token(token).build();
@@ -79,13 +68,30 @@ public Response loginLaborant(LaborantLoginDto loginDto) throws AuthenticationEx
         return new ErrorResponse("Invalid password or laborant ıd",false);}
     }
 
+    @Override
     public Response saveReport(ReportSaveDto reportSaveDto){
-        reportRepository.save(reportSaveDto.saveReportDto(reportSaveDto));
-        return new SuccesResponse("Report successfullf saved",true);
+        Optional<Laborant> laborant = laborantRepository.findByLaborantId(getPrincipal());
+        if (laborant.isPresent()){
+            reportRepository.save(reportSaveDto.saveReportDto(reportSaveDto,laborant));
+            return new SuccesResponse("Report successfullf saved",true);
+        }
+        else {
+            return new ErrorResponse("Error is occured when to save report",false);
+        }
     }
 
+    @Override
     public Response currenUser(){
     Laborant laborant = new Laborant();
         return new SuccesResponse(laborant.getAd(),true);
+    }
+    @Override
+    public String getPrincipal(){
+        String userName = null;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            userName = ((UserDetails)principal).getUsername();
+        }
+        return userName;
     }
 }

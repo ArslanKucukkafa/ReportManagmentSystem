@@ -62,7 +62,7 @@ public class LaborantController {
     }
 
     @GetMapping("/currentUser")
-    public Response currentUser(){
-        return laborantService.currenUser();
+    public String currentUser(){
+        return laborantService.getPrincipal();
     }
 }
