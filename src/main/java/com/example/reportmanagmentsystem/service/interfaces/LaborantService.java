@@ -6,7 +6,6 @@ import com.example.reportmanagmentsystem.model.dto.LaborantRegisterDto;
 import com.example.reportmanagmentsystem.model.dto.ReportDto;
 import com.example.reportmanagmentsystem.model.dto.ReportSaveDto;
 import com.example.reportmanagmentsystem.model.response.Response;
-
 import java.util.List;
 
 public interface LaborantService {
@@ -15,6 +14,8 @@ public interface LaborantService {
      Response loginLaborant(LaborantLoginDto loginDto);
 
     Response saveReport(ReportSaveDto reportSaveDto);
+
+    String getAllReportsWithAboutPatient(String patient_identity_no);
 
     Response updateReport(ReportDto reportDto);
     String getPrincipal();

@@ -30,18 +30,14 @@ public class LaborantController {
         laborantService.registerLaborant(registerDto);
         return ResponseEntity.ok("Kayıt Başarılı");
     }
-
-
     @PostMapping("/login")
     public Response loginLaborant(@RequestBody LaborantLoginDto loginDto){
        return laborantService.loginLaborant(loginDto);
     }
-
     @PostMapping("/saveReport")
     public Response saveReport(@RequestBody ReportSaveDto reportSaveDto){
         return  laborantService.saveReport(reportSaveDto);
     }
-
     @PutMapping ("/updateReport")
     public Response updateReport(@RequestBody ReportDto reportDto){
         return laborantService.updateReport(reportDto);
@@ -53,12 +49,10 @@ public class LaborantController {
     @GetMapping("/getAllReports")
     public List<Report> getAllReports(){ return laborantService.getAllReports();}
 
-    @GetMapping("/getPatientReport")
-    public Response getPatinetReports(){
-        return new Response();
+    @GetMapping("/getAllPatientReports")
+    public String getPatinetReports(@RequestParam String patient_identity_no){
+        return laborantService.getAllReportsWithAboutPatient(patient_identity_no);
     }
-
-
     @GetMapping("/hello")
     public String hello(){
         return "Hello";

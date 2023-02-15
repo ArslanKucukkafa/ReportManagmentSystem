@@ -17,7 +17,6 @@ import com.example.reportmanagmentsystem.repository.ReportRepository;
 import com.example.reportmanagmentsystem.repository.RoleRepository;
 import com.example.reportmanagmentsystem.service.interfaces.LaborantService;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.hql.internal.QueryExecutionRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +28,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.List;
@@ -97,6 +95,21 @@ public Response loginLaborant(LaborantLoginDto loginDto) throws AuthenticationEx
     public List<Report> getAllReports(){
         return reportRepository.findAll();
     }
+    @Override
+    public String getAllReportsWithAboutPatient(String patient_identity_no) {
+
+            Optional<Laborant>currentLaborant = laborantRepository.findByLaborantId(getPrincipal());
+
+            try {
+                System.out.println(currentLaborant.get().getId());
+                System.out.println(patient_identity_no);
+                 reportRepository.getAllPatientReports(patient_identity_no, currentLaborant.get().getId());
+            }catch (Exception e){
+                System.out.println(e);
+                return  e.toString();
+            }
+            return "work";
+    }
 
     @Override
     @Transactional
@@ -109,5 +122,4 @@ public Response loginLaborant(LaborantLoginDto loginDto) throws AuthenticationEx
         System.out.println("Exception");}
         return new SuccesResponse("Update processing is sucessfully",true);
     }
-
 }

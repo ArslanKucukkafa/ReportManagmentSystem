@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -41,7 +40,6 @@ public class Report {
     @ManyToOne
     @JoinColumn(name = "laborant_id")
     private Laborant laborant;
-
     @Column(name = "create_date")
     private LocalDateTime create_date;
 }
