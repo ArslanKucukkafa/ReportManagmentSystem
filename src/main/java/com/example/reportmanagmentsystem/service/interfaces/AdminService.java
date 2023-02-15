@@ -21,4 +21,7 @@ public interface AdminService {
 
     Response findRole(Role role);
 
+    Response findPerson(Laborant laborant);
+
+    Response findAllPerson();
 }

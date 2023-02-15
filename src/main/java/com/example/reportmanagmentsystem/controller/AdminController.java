@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/api/v1/admin")
 public class AdminController {
-
     @Autowired
     private AdminServiceImpl adminService;
 

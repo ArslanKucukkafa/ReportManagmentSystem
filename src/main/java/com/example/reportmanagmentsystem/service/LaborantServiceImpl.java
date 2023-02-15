@@ -2,9 +2,11 @@ package com.example.reportmanagmentsystem.service;
 
 import com.example.reportmanagmentsystem.config.security.JwtTokenUtil;
 import com.example.reportmanagmentsystem.model.Laborant;
+import com.example.reportmanagmentsystem.model.Report;
 import com.example.reportmanagmentsystem.model.Role;
 import com.example.reportmanagmentsystem.model.dto.LaborantLoginDto;
 import com.example.reportmanagmentsystem.model.dto.LaborantRegisterDto;
+import com.example.reportmanagmentsystem.model.dto.ReportDto;
 import com.example.reportmanagmentsystem.model.dto.ReportSaveDto;
 import com.example.reportmanagmentsystem.model.response.ErrorResponse;
 import com.example.reportmanagmentsystem.model.response.LoginResponse;
@@ -15,6 +17,7 @@ import com.example.reportmanagmentsystem.repository.ReportRepository;
 import com.example.reportmanagmentsystem.repository.RoleRepository;
 import com.example.reportmanagmentsystem.service.interfaces.LaborantService;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.hql.internal.QueryExecutionRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +30,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -79,12 +84,6 @@ public Response loginLaborant(LaborantLoginDto loginDto) throws AuthenticationEx
             return new ErrorResponse("Error is occured when to save report",false);
         }
     }
-
-    @Override
-    public Response currenUser(){
-    Laborant laborant = new Laborant();
-        return new SuccesResponse(laborant.getAd(),true);
-    }
     @Override
     public String getPrincipal(){
         String userName = null;
@@ -94,4 +93,21 @@ public Response loginLaborant(LaborantLoginDto loginDto) throws AuthenticationEx
         }
         return userName;
     }
+    @Override
+    public List<Report> getAllReports(){
+        return reportRepository.findAll();
+    }
+
+    @Override
+    @Transactional
+    public Response updateReport(ReportDto reportDto){
+
+    try {
+        reportRepository.updateReport(reportDto.getDfnTitle(),reportDto.getDfnImgPath(), reportDto.getDfnDetails(),reportDto.getReportId());
+    } catch (Exception e){
+        System.out.println(e);
+        System.out.println("Exception");}
+        return new SuccesResponse("Update processing is sucessfully",true);
+    }
+
 }

@@ -1,7 +1,6 @@
 package com.example.reportmanagmentsystem.model;
 
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,8 +38,6 @@ public class Report {
 
     @Column(name = "dfn_img_path")
     private String dfnImgPath;
-
-    //TODO  Token parse decode edildikten sonra elde edilen Laborant id Report nesnesine set edilecek
     @ManyToOne
     @JoinColumn(name = "laborant_id")
     private Laborant laborant;

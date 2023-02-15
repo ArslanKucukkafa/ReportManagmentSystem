@@ -61,5 +61,13 @@ public class AdminServiceImpl implements AdminService {
         return null;
     }
 
+    @Override
+    public Response findPerson(Laborant laborant){
+        return null;}
+
+    @Override
+    public Response findAllPerson(){
+        return null;}
+
 
 }

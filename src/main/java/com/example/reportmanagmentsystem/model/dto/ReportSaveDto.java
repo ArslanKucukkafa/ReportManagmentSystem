@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Getter
@@ -31,9 +32,14 @@ public class ReportSaveDto {
 
     public Report saveReportDto(ReportSaveDto reportDto, Optional<Laborant> laborant){
         Report report = new Report();
+        report.setLaborant(laborant.get());
         report.setAd(reportDto.getPatient_firstname());
         report.setSoyad(reportDto.getPatient_lastname());
-        report.setLaborant(laborant.get());
+        report.setPatient_identity_no(reportDto.getPatient_identity_no());
+        report.setDfnTitle(reportDto.getDfnTitle());
+        report.setDfnDetails(reportDto.getDfnDetails());
+        report.setDfnImgPath(reportDto.getDfnImgPath());
+        report.setCreate_date(LocalDateTime.now());
         return report;
     }
 }
