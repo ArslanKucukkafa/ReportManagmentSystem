@@ -96,19 +96,9 @@ public Response loginLaborant(LaborantLoginDto loginDto) throws AuthenticationEx
         return reportRepository.findAll();
     }
     @Override
-    public String getAllReportsWithAboutPatient(String patient_identity_no) {
-
-            Optional<Laborant>currentLaborant = laborantRepository.findByLaborantId(getPrincipal());
-
-            try {
-                System.out.println(currentLaborant.get().getId());
-                System.out.println(patient_identity_no);
-                 reportRepository.getAllPatientReports(patient_identity_no, currentLaborant.get().getId());
-            }catch (Exception e){
-                System.out.println(e);
-                return  e.toString();
-            }
-            return "work";
+    public List<Report> getAllReportsWithAboutPatient(String patient_identity_no) {
+    Optional<Laborant>currentLaborant = laborantRepository.findByLaborantId(getPrincipal());
+    return reportRepository.getAllPatientReports(patient_identity_no, currentLaborant.get().getId());
     }
 
     @Override

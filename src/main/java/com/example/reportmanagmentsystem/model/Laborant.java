@@ -49,8 +49,4 @@ public class Laborant {
     )
     private Set<Role> roles = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private List<Report> reports;
-
 }

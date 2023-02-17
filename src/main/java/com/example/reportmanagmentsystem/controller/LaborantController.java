@@ -50,7 +50,7 @@ public class LaborantController {
     public List<Report> getAllReports(){ return laborantService.getAllReports();}
 
     @GetMapping("/getAllPatientReports")
-    public String getPatinetReports(@RequestParam String patient_identity_no){
+    public List<Report> getPatinetReports(@RequestParam String patient_identity_no){
         return laborantService.getAllReportsWithAboutPatient(patient_identity_no);
     }
     @GetMapping("/hello")

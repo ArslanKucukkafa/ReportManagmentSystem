@@ -37,7 +37,7 @@ public class Report {
 
     @Column(name = "dfn_img_path")
     private String dfnImgPath;
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "laborant_id")
     private Laborant laborant;
     @Column(name = "create_date")

@@ -21,15 +21,6 @@ public class ReportSaveDto {
     private String dfnDetails;
     private String dfnImgPath;
 
-    public String getPrincipal(){
-        String userName = null;
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-            userName = ((UserDetails)principal).getUsername();
-        }
-        return userName;
-    }
-
     public Report saveReportDto(ReportSaveDto reportDto, Optional<Laborant> laborant){
         Report report = new Report();
         report.setLaborant(laborant.get());

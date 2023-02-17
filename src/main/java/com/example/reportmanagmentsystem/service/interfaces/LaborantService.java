@@ -15,7 +15,7 @@ public interface LaborantService {
 
     Response saveReport(ReportSaveDto reportSaveDto);
 
-    String getAllReportsWithAboutPatient(String patient_identity_no);
+    List<Report> getAllReportsWithAboutPatient(String patient_identity_no);
 
     Response updateReport(ReportDto reportDto);
     String getPrincipal();
