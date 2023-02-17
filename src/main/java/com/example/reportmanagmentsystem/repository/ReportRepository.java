@@ -20,4 +20,6 @@ public interface ReportRepository extends JpaRepository<Report,Long> {
     void getAllPatientReports1(String patient_identity_no,Integer laborant_id);*/
     @Query("SELECT l from Report l Where l.patient_identity_no = :patient_identity_no and l.laborant.id= :laborant_id")
     List<Report> getAllPatientReports(@Param("patient_identity_no") String patient_identity_no, @Param("laborant_id")Integer laborant_id);
+
+    void deleteByReportIdAndLaborantId(Long report_id,int laborant_id);
 }

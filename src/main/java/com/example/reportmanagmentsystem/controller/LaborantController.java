@@ -1,5 +1,6 @@
 package com.example.reportmanagmentsystem.controller;
 
+import com.example.reportmanagmentsystem.model.Laborant;
 import com.example.reportmanagmentsystem.model.Report;
 import com.example.reportmanagmentsystem.model.dto.LaborantLoginDto;
 import com.example.reportmanagmentsystem.model.dto.LaborantRegisterDto;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -43,7 +45,7 @@ public class LaborantController {
         return laborantService.updateReport(reportDto);
     }
     @PostMapping("/deleteReport")
-    public Response deleteReport(){ return new LoginResponse();
+    public Response deleteReport(@RequestParam Long report_id){ return laborantService.deleteReport(report_id);
     }
 
     @GetMapping("/getAllReports")
@@ -59,7 +61,7 @@ public class LaborantController {
     }
 
     @GetMapping("/currentUser")
-    public String currentUser(){
+    public Optional<Laborant> currentUser(){
         return laborantService.getPrincipal();
     }
 }

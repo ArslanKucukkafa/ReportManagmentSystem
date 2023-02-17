@@ -73,7 +73,7 @@ public Response loginLaborant(LaborantLoginDto loginDto) throws AuthenticationEx
 
     @Override
     public Response saveReport(ReportSaveDto reportSaveDto){
-        Optional<Laborant> laborant = laborantRepository.findByLaborantId(getPrincipal());
+        Optional<Laborant> laborant = getPrincipal();
         if (laborant.isPresent()){
             reportRepository.save(reportSaveDto.saveReportDto(reportSaveDto,laborant));
             return new SuccesResponse("Report successfullf saved",true);
@@ -83,13 +83,15 @@ public Response loginLaborant(LaborantLoginDto loginDto) throws AuthenticationEx
         }
     }
     @Override
-    public String getPrincipal(){
+    public Optional<Laborant> getPrincipal(){
         String userName = null;
+        Optional<Laborant>laborant=null;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {
             userName = ((UserDetails)principal).getUsername();
+            laborant=laborantRepository.findByLaborantId(userName);
         }
-        return userName;
+        return laborant;
     }
     @Override
     public List<Report> getAllReports(){
@@ -97,8 +99,7 @@ public Response loginLaborant(LaborantLoginDto loginDto) throws AuthenticationEx
     }
     @Override
     public List<Report> getAllReportsWithAboutPatient(String patient_identity_no) {
-    Optional<Laborant>currentLaborant = laborantRepository.findByLaborantId(getPrincipal());
-    return reportRepository.getAllPatientReports(patient_identity_no, currentLaborant.get().getId());
+    return reportRepository.getAllPatientReports(patient_identity_no, getPrincipal().get().getId());
     }
 
     @Override
@@ -111,5 +112,12 @@ public Response loginLaborant(LaborantLoginDto loginDto) throws AuthenticationEx
         System.out.println(e);
         System.out.println("Exception");}
         return new SuccesResponse("Update processing is sucessfully",true);
+    }
+
+    @Override
+    @Transactional
+    public Response deleteReport(Long report_id){
+        reportRepository.deleteByReportIdAndLaborantId(report_id,getPrincipal().get().getId());
+        return new SuccesResponse("Report deleted successfully",true);
     }
 }
