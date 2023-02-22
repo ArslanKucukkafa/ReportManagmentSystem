@@ -16,7 +16,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Laborant laborant = laborantRepository.findByLaborantId(username).orElseThrow(()->new UsernameNotFoundException("User not found with laborant_id: \"+username"));
-        System.out.println(laborant.getAd());
         return new LaborantDetailsDto(laborant);
     }
 }

@@ -24,8 +24,6 @@ public class LaborantController {
 
     @Autowired
     private LaborantServiceImpl laborantService;
-    @Autowired
-    private ReportRepository reportRepository;
 
     @PostMapping("/save")
     public ResponseEntity saveLaborant(@RequestBody LaborantRegisterDto registerDto) {

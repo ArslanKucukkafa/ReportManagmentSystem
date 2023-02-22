@@ -1,16 +1,19 @@
 package com.example.reportmanagmentsystem.service;
 
 import com.example.reportmanagmentsystem.model.Laborant;
-import com.example.reportmanagmentsystem.model.Role;
 import com.example.reportmanagmentsystem.model.dto.RoleDto;
 import com.example.reportmanagmentsystem.model.response.ErrorResponse;
 import com.example.reportmanagmentsystem.model.response.LoginResponse;
 import com.example.reportmanagmentsystem.model.response.Response;
+import com.example.reportmanagmentsystem.model.response.SuccesResponse;
 import com.example.reportmanagmentsystem.repository.LaborantRepository;
+import com.example.reportmanagmentsystem.repository.ReportRepository;
 import com.example.reportmanagmentsystem.repository.RoleRepository;
 import com.example.reportmanagmentsystem.service.interfaces.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +21,7 @@ public class AdminServiceImpl implements AdminService {
 
     private final LaborantRepository laborantRepository;
     private final RoleRepository roleRepository;
+    private final ReportRepository reportRepository;
 
     @Override
     public Response saveRole(RoleDto roleDto){
@@ -30,44 +34,37 @@ public class AdminServiceImpl implements AdminService {
         }
     }
 
+
+    //TODO Deneme olarak role tablosuna erişim kontrol edilecek
+    public List<Laborant> isHaveRole(){
+        return laborantRepository.findAll("LABORANT"); }
+
+
     //  TODO Role update işlemi admin tarafından yapılacak.
     @Override
-    public Response putRoleToLaborant(Laborant laborant) {
-        return null;
+    public Response addRoleToLaborant(Laborant laborant) {return null;}
+
+    @Override
+    public Response laborantAccountActivate(Boolean activated, String laborant_id) {
+        laborantRepository.updateByLaborantId(activated,laborant_id);
+        return new SuccesResponse("Account is activated",true);}
+
+
+    @Override
+    public Response deleteLaborant(Laborant laborant) {
+        laborantRepository.deleteByLaborantId(laborant.getLaborantId());
+        return new SuccesResponse("Laborant deleted successfully",true);
     }
 
     @Override
-    public Response deletePerson(Laborant laborant) {
-        return null;
+    public Response getAllReportsLaboratories(String laborant_id) {
+        reportRepository.getReportByLaborant_Id(laborant_id);
+        return new SuccesResponse(reportRepository.getReportByLaborant_Id(laborant_id).toString(),true);
     }
 
     @Override
-    public Response updatePerson(Laborant laborant) {
-        return null;
+    public Response getAllPerson() {
+        return new SuccesResponse(laborantRepository.findAll().toString(),true);
     }
-
-    @Override
-    public Response updateRole(Role role) {
-        return null;
-    }
-
-    @Override
-    public Response deleteRole(Role role) {
-        return null;
-    }
-
-    @Override
-    public Response findRole(Role role) {
-        return null;
-    }
-
-    @Override
-    public Response findPerson(Laborant laborant){
-        return null;}
-
-    @Override
-    public Response findAllPerson(){
-        return null;}
-
 
 }

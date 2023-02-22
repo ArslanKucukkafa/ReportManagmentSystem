@@ -53,7 +53,7 @@ private final JwtTokenUtil jwtTokenUtil;
 public void registerLaborant(LaborantRegisterDto registerDto){
     registerDto.setPassword(encoder.encode(registerDto.getPassword()));
     Laborant laborant = registerDto.registerLaborantDto(registerDto);
-    Role role = roleRepository.findByRoleName("LABORANT");
+    Role role = roleRepository.findByRoleName("ADMIN");
     laborant.setRoles(new HashSet<>());
     laborant.getRoles().add(role);
     System.out.println(registerDto.getPassword());
