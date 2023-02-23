@@ -9,11 +9,9 @@ public interface AdminService {
 
     Response saveRole(RoleDto roleDto);
 
-    Response addRoleToLaborant(Laborant laborant);
-
     abstract Response laborantAccountActivate(Boolean activated, String laborant_id);
 
-    Response deleteLaborant(Laborant laborant);
+    Response deleteLaborant(String laborant_id);
 
     Response getAllReportsLaboratories(String laborant_id);
 

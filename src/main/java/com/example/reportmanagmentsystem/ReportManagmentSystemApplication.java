@@ -6,7 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@OpenAPIDefinition(info = @Info(title = "Arslan Apı", version = "2.0", description = "Loaborant Documentation"))
+@OpenAPIDefinition(info = @Info(title = "Arslan Küçükkafa : www.linkedin.com/in/arslan-küçükkafa-69b1431aa", version = "2.0", description = "Loaborant Endpoint Documentation"))
 public class ReportManagmentSystemApplication {
 
     public static void main(String[] args) {

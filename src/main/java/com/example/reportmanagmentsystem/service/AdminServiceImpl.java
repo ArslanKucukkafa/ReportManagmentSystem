@@ -13,7 +13,9 @@ import com.example.reportmanagmentsystem.service.interfaces.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -40,20 +42,22 @@ public class AdminServiceImpl implements AdminService {
         return laborantRepository.findAll("LABORANT"); }
 
 
-    //  TODO Role update işlemi admin tarafından yapılacak.
-    @Override
-    public Response addRoleToLaborant(Laborant laborant) {return null;}
-
     @Override
     public Response laborantAccountActivate(Boolean activated, String laborant_id) {
         laborantRepository.updateByLaborantId(activated,laborant_id);
         return new SuccesResponse("Account is activated",true);}
 
-
+    @Transactional
     @Override
-    public Response deleteLaborant(Laborant laborant) {
-        laborantRepository.deleteByLaborantId(laborant.getLaborantId());
-        return new SuccesResponse("Laborant deleted successfully",true);
+    public Response deleteLaborant(String laborant_id) {
+        Optional<Laborant> laborant = laborantRepository.findByLaborantId(laborant_id);
+        if(laborant.isPresent()){
+            laborantRepository.deleteByLaborantId(laborant_id);
+            return new SuccesResponse("Laborant deleted successfully",true);
+        }else{
+            return new SuccesResponse("Laborant not avaliable ",false);
+        }
+
     }
 
     @Override

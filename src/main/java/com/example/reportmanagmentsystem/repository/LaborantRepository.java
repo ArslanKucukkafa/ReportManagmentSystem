@@ -18,9 +18,6 @@ import java.util.Set;
 public interface LaborantRepository extends JpaRepository<Laborant,Integer> {
     Optional<Laborant> findByLaborantId(String laborant_id);
 
-    @Query("UPDATE Laborant l SET l.roles = b.roles =:ADMIN Where")
-    public Response updateRole(@Param("ADMIN")String ADMIN,@Param("laborant_id")String laborant_id);
-
     @Query("SELECT l from Laborant l JOIN l.roles r where r.roleName=?1")
     List<Laborant> findAll(String role);
 

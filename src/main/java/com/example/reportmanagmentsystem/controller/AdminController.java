@@ -3,6 +3,7 @@ package com.example.reportmanagmentsystem.controller;
 import com.example.reportmanagmentsystem.model.Laborant;
 import com.example.reportmanagmentsystem.model.dto.RoleDto;
 import com.example.reportmanagmentsystem.model.response.Response;
+import com.example.reportmanagmentsystem.repository.LaborantRepository;
 import com.example.reportmanagmentsystem.repository.ReportRepository;
 import com.example.reportmanagmentsystem.service.AdminServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +17,15 @@ public class AdminController {
     private AdminServiceImpl adminService;
     @Autowired
     private ReportRepository reportRepository;
+    @Autowired
+    private LaborantRepository laborantRepository;
 
     @PostMapping("/saveRole")
     public Response saveRole(RoleDto roleDto){
        return adminService.saveRole(roleDto);
     }
     @PostMapping("/deleteLaborant")
-    public Response deleteLaborant(@RequestBody Laborant laborant){return adminService.deleteLaborant(laborant);}
+    public Response deleteLaborant(@RequestParam String laborant_id){return adminService.deleteLaborant(laborant_id);}
 
     @GetMapping("/getAllReportsLaboratories")
     public Response getAllReportsLaboratories(@RequestParam String laborant_id){return adminService.getAllReportsLaboratories(laborant_id);}
@@ -33,11 +36,6 @@ public class AdminController {
     //Hesap durumu aktifse deaktif degilse aktif olarak degiştirilir.
     @PutMapping("/laborantAccountActivate")
     public Response laborantAccountActivate(@RequestBody Boolean activated,String laborant_id){return adminService.laborantAccountActivate(activated,laborant_id);}
-
-    @PutMapping("/roleUpgrade")
-    public Response roleUpgrade(){
-
-    }
 
     @GetMapping("/hello")
     public String HelloAdmin(){
