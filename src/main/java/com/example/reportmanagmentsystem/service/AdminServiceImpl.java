@@ -1,6 +1,9 @@
 package com.example.reportmanagmentsystem.service;
 
 import com.example.reportmanagmentsystem.model.Laborant;
+import com.example.reportmanagmentsystem.model.Report;
+import com.example.reportmanagmentsystem.model.Role;
+import com.example.reportmanagmentsystem.model.dto.ReportDto;
 import com.example.reportmanagmentsystem.model.dto.RoleDto;
 import com.example.reportmanagmentsystem.model.response.ErrorResponse;
 import com.example.reportmanagmentsystem.model.response.LoginResponse;
@@ -14,8 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +45,7 @@ public class AdminServiceImpl implements AdminService {
 
 
     @Override
+    @Transactional
     public Response laborantAccountActivate(Boolean activated, String laborant_id) {
         laborantRepository.updateByLaborantId(activated,laborant_id);
         return new SuccesResponse("Account is activated",true);}
@@ -57,18 +60,25 @@ public class AdminServiceImpl implements AdminService {
         }else{
             return new SuccesResponse("Laborant not avaliable ",false);
         }
-
     }
 
     @Override
-    public Response getAllReportsLaboratories(String laborant_id) {
-        reportRepository.getReportByLaborant_Id(laborant_id);
-        return new SuccesResponse(reportRepository.getReportByLaborant_Id(laborant_id).toString(),true);
+    public List<Report> getAllReportsLaboratories(String laborant_id) {
+        Optional<Laborant> laborant = laborantRepository.findByLaborantId(laborant_id);
+        return reportRepository.findByLaborantIdOrdOrderByCreate_dateAsc(laborant.get().getId());
     }
 
     @Override
-    public Response getAllPerson() {
-        return new SuccesResponse(laborantRepository.findAll().toString(),true);
+    public List<Laborant> getAllPerson() {
+        return laborantRepository.findAll();
+    }
+
+    public Response upgradeRole (String laborant_id){
+        Role role = roleRepository.findByRoleName("ADMIN");
+        Optional<Laborant> laborant = laborantRepository.findByLaborantId(laborant_id);
+        laborant.get().addRole(role);
+        laborantRepository.save(laborant.get());
+        return new SuccesResponse("role changed successfully",true);
     }
 
 }

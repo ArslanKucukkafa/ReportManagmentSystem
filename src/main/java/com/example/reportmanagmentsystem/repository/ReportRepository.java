@@ -1,6 +1,7 @@
 package com.example.reportmanagmentsystem.repository;
 
 import com.example.reportmanagmentsystem.model.Report;
+import com.example.reportmanagmentsystem.model.dto.ReportDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -21,6 +22,7 @@ public interface ReportRepository extends JpaRepository<Report,Long> {
     @Query("SELECT l from Report l Where l.patient_identity_no = :patient_identity_no and l.laborant.id= :laborant_id")
     List<Report> getAllPatientReports(@Param("patient_identity_no") String patient_identity_no, @Param("laborant_id")Integer laborant_id);
 
-    List<Report> getReportByLaborant_Id(String laborant_id);
+    @Query("SELECT r FROM Report r WHERE r.laborant.id=?1 order by r.create_date asc")
+    List<Report> findByLaborantIdOrdOrderByCreate_dateAsc(int laborant_id);
     void deleteByReportIdAndLaborantId(Long report_id,int laborant_id);
 }

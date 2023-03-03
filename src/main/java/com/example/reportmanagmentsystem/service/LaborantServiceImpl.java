@@ -51,13 +51,18 @@ private final JwtTokenUtil jwtTokenUtil;
     private PasswordEncoder encoder;
 @Override
 public void registerLaborant(LaborantRegisterDto registerDto){
-    registerDto.setPassword(encoder.encode(registerDto.getPassword()));
-    Laborant laborant = registerDto.registerLaborantDto(registerDto);
-    Role role = roleRepository.findByRoleName("ADMIN");
-    laborant.setRoles(new HashSet<>());
-    laborant.getRoles().add(role);
-    System.out.println(registerDto.getPassword());
-    laborantRepository.save(laborant);
+    if(laborantRepository.findByLaborantId(registerDto.getLaborant_id()).isPresent()){
+    }else{
+        registerDto.setPassword(encoder.encode(registerDto.getPassword()));
+        Laborant laborant = registerDto.registerLaborantDto(registerDto);
+        Role role = roleRepository.findByRoleName("LABORANT");
+        laborant.setRoles(new HashSet<>());
+        laborant.getRoles().add(role);
+        System.out.println(registerDto.getPassword());
+        laborantRepository.save(laborant);
+    }
+
+
     }
 @Override
 public Response loginLaborant(LaborantLoginDto loginDto) throws AuthenticationException {
