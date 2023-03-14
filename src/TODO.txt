@@ -1,4 +1,0 @@
-1- LaborantService de implement edilen UserDetailsService ile gelen loadByUsername doldurulacak
-2- Controller clasında loginLaborant metodu yanlış reaponse dönderiyor.
-3- LoadByUsername fonksiyonu string inputu alan bir yerde kullanılıyor . hata olabilir.
-4- token genereti control et
