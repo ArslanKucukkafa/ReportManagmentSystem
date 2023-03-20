@@ -2,7 +2,6 @@ package com.example.reportmanagmentsystem.service.interfaces;
 
 import com.example.reportmanagmentsystem.model.Laborant;
 import com.example.reportmanagmentsystem.model.Report;
-import com.example.reportmanagmentsystem.model.dto.ReportDto;
 import com.example.reportmanagmentsystem.model.dto.RoleDto;
 import com.example.reportmanagmentsystem.model.response.Response;
 
@@ -18,5 +17,5 @@ public interface AdminService {
 
     List<Report> getAllReportsLaboratories(String laborant_id);
 
-    List<Laborant> getAllPerson();
+    List<Laborant> getAllPerson(boolean activate);
 }

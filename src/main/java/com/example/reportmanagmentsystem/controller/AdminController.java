@@ -33,8 +33,8 @@ public class AdminController {
     @GetMapping("/getAllReportsLaboratories")
     public List<Report> getAllReportsLaboratories(@RequestParam String laborant_id){return adminService.getAllReportsLaboratories(laborant_id);}
 
-    @GetMapping("/getAllLaboratories")
-    public List<Laborant> getAllLaboratories(){return adminService.getAllPerson();}
+    @GetMapping("/getAllLaboratories/{activate}")
+    public List<Laborant> getAllLaboratories(@PathVariable(value ="activate") boolean activate){return adminService.getAllPerson(activate);}
 
     //Hesap durumu aktifse deaktif degilse aktif olarak degiştirilir.
     @PutMapping("/laborantAccountActivate")

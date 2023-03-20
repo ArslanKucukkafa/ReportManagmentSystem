@@ -3,7 +3,6 @@ package com.example.reportmanagmentsystem.service;
 import com.example.reportmanagmentsystem.model.Laborant;
 import com.example.reportmanagmentsystem.model.Report;
 import com.example.reportmanagmentsystem.model.Role;
-import com.example.reportmanagmentsystem.model.dto.ReportDto;
 import com.example.reportmanagmentsystem.model.dto.RoleDto;
 import com.example.reportmanagmentsystem.model.response.ErrorResponse;
 import com.example.reportmanagmentsystem.model.response.LoginResponse;
@@ -69,10 +68,8 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<Laborant> getAllPerson() {
-        return laborantRepository.findAll();
-    }
-
+    public List<Laborant> getAllPerson(boolean activate) {
+        return laborantRepository.findLaborantsByEnabledIs(activate);}
     public Response upgradeRole (String laborant_id){
         Role role = roleRepository.findByRoleName("ADMIN");
         Optional<Laborant> laborant = laborantRepository.findByLaborantId(laborant_id);
@@ -80,5 +77,4 @@ public class AdminServiceImpl implements AdminService {
         laborantRepository.save(laborant.get());
         return new SuccesResponse("role changed successfully",true);
     }
-
 }
