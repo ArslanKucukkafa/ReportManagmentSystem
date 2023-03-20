@@ -15,7 +15,6 @@ import java.util.Set;
 @Setter
 @Entity(name = "Role")
 public class Role {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int role_id;

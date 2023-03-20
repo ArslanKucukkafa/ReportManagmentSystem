@@ -27,23 +27,6 @@ public class AdminServiceImpl implements AdminService {
     private final ReportRepository reportRepository;
 
     @Override
-    public Response saveRole(RoleDto roleDto){
-        try {
-            roleRepository.save(roleDto.registerRole(roleDto));
-            return new LoginResponse("Role Kayıt Edildi");
-        }
-        catch (Exception exception){
-            return new ErrorResponse(String.valueOf(exception),false);
-        }
-    }
-
-
-    //TODO Deneme olarak role tablosuna erişim kontrol edilecek
-    public List<Laborant> isHaveRole(){
-        return laborantRepository.findAll("LABORANT"); }
-
-
-    @Override
     @Transactional
     public Response laborantAccountActivate(Boolean activated, String laborant_id) {
         laborantRepository.updateByLaborantId(activated,laborant_id);

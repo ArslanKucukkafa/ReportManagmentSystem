@@ -19,15 +19,7 @@ import java.util.List;
 public class AdminController {
     @Autowired
     private AdminServiceImpl adminService;
-    @Autowired
-    private ReportRepository reportRepository;
-    @Autowired
-    private LaborantRepository laborantRepository;
 
-    @PostMapping("/saveRole")
-    public Response saveRole(RoleDto roleDto){
-       return adminService.saveRole(roleDto);
-    }
     @PostMapping("/deleteLaborant")
     public Response deleteLaborant(@RequestParam String laborant_id){return adminService.deleteLaborant(laborant_id);}
     @GetMapping("/getAllReportsLaboratories")

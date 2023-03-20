@@ -9,8 +9,6 @@ import java.util.List;
 
 public interface AdminService {
 
-    Response saveRole(RoleDto roleDto);
-
     abstract Response laborantAccountActivate(Boolean activated, String laborant_id);
 
     Response deleteLaborant(String laborant_id);
