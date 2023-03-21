@@ -35,7 +35,8 @@ public class Report {
     @Column(name = "dfn_Details")
     private String dfnDetails;
 
-    @Column(name = "dfn_img_path")
+    @Lob
+    @Column(columnDefinition = "bytea")
     private String dfnImgPath;
     @ManyToOne()
     @JoinColumn(name = "laborant_id")
