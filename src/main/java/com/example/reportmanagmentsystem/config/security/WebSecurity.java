@@ -34,7 +34,9 @@ private JwtTokenFilter jwtTokenFilter;
             "/swagger-ui.html",
             "/v3/api-docs/**",
             "/swagger-ui/**",
-            "/api/v1/admin/**"
+            "/api/v1/admin/**",
+            "/api/v1/laboratories/**",
+            "/api/v1/**"
     };
 
 

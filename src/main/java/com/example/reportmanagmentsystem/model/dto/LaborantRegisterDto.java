@@ -12,15 +12,15 @@ import lombok.Setter;
 @NoArgsConstructor
 public class LaborantRegisterDto {
 
-    private String ad;
-    private String soyad;
+    private String name;
+    private String surname;
     private String laborant_id;
     private String password;
 
     public Laborant registerLaborantDto(LaborantRegisterDto laborantregisterDto){
         Laborant laborant = new Laborant();
-        laborant.setAd(laborantregisterDto.getAd());
-        laborant.setSoyad(laborantregisterDto.getSoyad());
+        laborant.setAd(laborantregisterDto.getName());
+        laborant.setSoyad(laborantregisterDto.getSurname());
         laborant.setLaborantId(laborantregisterDto.getLaborant_id());
         laborant.setPassword(laborantregisterDto.getPassword());
         return laborant;

@@ -6,37 +6,41 @@ import com.example.reportmanagmentsystem.model.dto.LaborantLoginDto;
 import com.example.reportmanagmentsystem.model.dto.LaborantRegisterDto;
 import com.example.reportmanagmentsystem.model.dto.ReportDto;
 import com.example.reportmanagmentsystem.model.dto.ReportSaveDto;
-import com.example.reportmanagmentsystem.model.response.LoginResponse;
+import com.example.reportmanagmentsystem.model.response.ErrorResponse;
 import com.example.reportmanagmentsystem.model.response.Response;
-import com.example.reportmanagmentsystem.repository.ReportRepository;
+import com.example.reportmanagmentsystem.model.response.SuccesResponse;
 import com.example.reportmanagmentsystem.service.LaborantServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/api/v1/laboratories")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class LaborantController {
 
     @Autowired
     private LaborantServiceImpl laborantService;
 
     @PostMapping("/save")
-    public ResponseEntity saveLaborant(@RequestBody LaborantRegisterDto registerDto) {
-        laborantService.registerLaborant(registerDto);
-        return ResponseEntity.ok("Kayıt Başarılı");
+    public Response saveLaborant(@RequestBody LaborantRegisterDto registerDto) {
+        try {
+            laborantService.registerLaborant(registerDto);
+            return new SuccesResponse("Kayıt işlemi başarılı",true);
+        }catch (Exception e){
+            return new ErrorResponse("Kayıt işlemi sırasında hata oluştu",false);
+        }
     }
     @PostMapping("/login")
     public Response loginLaborant(@RequestBody LaborantLoginDto loginDto){
        return laborantService.loginLaborant(loginDto);
     }
     @PostMapping("/saveReport")
-    public Response saveReport(@RequestBody ReportSaveDto reportSaveDto){
-        return  laborantService.saveReport(reportSaveDto);
+    public Response saveReport(@RequestBody ReportSaveDto reportSaveDto, MultipartFile file) throws Exception {
+        return new SuccesResponse(laborantService.saveReport(reportSaveDto,file).toString(),true);
     }
     @PutMapping ("/updateReport")
     public Response updateReport(@RequestBody ReportDto reportDto){

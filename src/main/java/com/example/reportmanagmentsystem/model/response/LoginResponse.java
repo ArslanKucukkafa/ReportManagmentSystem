@@ -11,4 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LoginResponse extends Response{
     public String token;
+    public String rol;
+
+    public boolean status;
 }

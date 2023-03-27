@@ -7,7 +7,9 @@ import lombok.Setter;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.Optional;
 
 @Getter
@@ -19,9 +21,18 @@ public class ReportSaveDto {
     private String patient_identity_no;
     private String dfnTitle;
     private String dfnDetails;
-    private MultipartFile dfnImgPath;
 
-    public Report saveReportDto(ReportSaveDto reportDto, Optional<Laborant> laborant){
+    public String imagesConvertor(MultipartFile file) throws IOException{
+        String filename= StringUtils.cleanPath(file.getOriginalFilename());
+        if(filename.contains(".."))
+        {
+            System.out.println("not a a valid file");
+        }
+           return Base64.getEncoder().encodeToString(file.getBytes());
+
+    }
+
+    public Report saveReportDto(ReportSaveDto reportDto, Optional<Laborant> laborant,MultipartFile file) throws Exception{
         Report report = new Report();
         report.setLaborant(laborant.get());
         report.setAd(reportDto.getPatient_firstname());
@@ -29,8 +40,7 @@ public class ReportSaveDto {
         report.setPatient_identity_no(reportDto.getPatient_identity_no());
         report.setDfnTitle(reportDto.getDfnTitle());
         report.setDfnDetails(reportDto.getDfnDetails());
-        String filename= StringUtils.cleanPath(reportDto.getDfnImgPath().getOriginalFilename());
-        report.setDfnImgPath(reportDto.getDfnImgPath());
+        report.setDfnImgPath(imagesConvertor(file));
         report.setCreate_date(LocalDateTime.now());
         return report;
     }

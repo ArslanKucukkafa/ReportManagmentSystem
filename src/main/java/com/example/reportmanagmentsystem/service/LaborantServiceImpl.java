@@ -28,7 +28,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -69,18 +72,20 @@ public Response loginLaborant(LaborantLoginDto loginDto) throws AuthenticationEx
     Authentication  authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getLaborant_id(),loginDto.getPassword()));
     Optional<Laborant> isConfirmed = laborantRepository.findByLaborantId(loginDto.getLaborant_id());
     if(isConfirmed.isPresent()){
+        List<Role>roles=new ArrayList<Role>(isConfirmed.get().getRoles());
         String token = jwtTokenUtil.generateToken(authentication);
-        return LoginResponse.builder().token(token).build();
+        System.out.println(isConfirmed.get().getRoles());
+        return new LoginResponse(token,roles.get(0).getRoleName(),true);
     }
     else {
         return new ErrorResponse("Invalid password or laborant ıd",false);}
     }
 
     @Override
-    public Response saveReport(ReportSaveDto reportSaveDto){
+    public Response saveReport(ReportSaveDto reportSaveDto,MultipartFile file) throws Exception {
         Optional<Laborant> laborant = getPrincipal();
         if (laborant.isPresent()){
-            reportRepository.save(reportSaveDto.saveReportDto(reportSaveDto,laborant));
+            reportRepository.save(reportSaveDto.saveReportDto(reportSaveDto,laborant,file));
             return new SuccesResponse("Report successfullf saved",true);
         }
         else {
