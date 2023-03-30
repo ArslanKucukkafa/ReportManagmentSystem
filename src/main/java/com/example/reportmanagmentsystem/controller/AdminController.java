@@ -2,15 +2,12 @@ package com.example.reportmanagmentsystem.controller;
 
 import com.example.reportmanagmentsystem.model.Laborant;
 import com.example.reportmanagmentsystem.model.Report;
-import com.example.reportmanagmentsystem.model.dto.ReportDto;
-import com.example.reportmanagmentsystem.model.dto.RoleDto;
 import com.example.reportmanagmentsystem.model.response.Response;
-import com.example.reportmanagmentsystem.repository.LaborantRepository;
-import com.example.reportmanagmentsystem.repository.ReportRepository;
 import com.example.reportmanagmentsystem.service.AdminServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -41,4 +38,7 @@ public class AdminController {
     public Response changeRole(@RequestParam String laborant_id){
        return adminService.upgradeRole(laborant_id);
     }
+
+    @GetMapping("/laborantDetail")
+    public HashMap<String, String> laborantDetail(String laborant_id){return adminService.getDetailsLaborant(laborant_id);}
 }

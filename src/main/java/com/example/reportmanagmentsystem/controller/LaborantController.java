@@ -11,11 +11,15 @@ import com.example.reportmanagmentsystem.model.response.Response;
 import com.example.reportmanagmentsystem.model.response.SuccesResponse;
 import com.example.reportmanagmentsystem.service.LaborantServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
 @RequestMapping("/api/v1/laboratories")
@@ -38,9 +42,10 @@ public class LaborantController {
     public Response loginLaborant(@RequestBody LaborantLoginDto loginDto){
        return laborantService.loginLaborant(loginDto);
     }
-    @PostMapping("/saveReport")
-    public Response saveReport(@RequestBody ReportSaveDto reportSaveDto, MultipartFile file) throws Exception {
-        return new SuccesResponse(laborantService.saveReport(reportSaveDto,file).toString(),true);
+
+    @PostMapping(value = {"/saveReport"},consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public Response saveReport(@RequestPart("reportSaveDto") ReportSaveDto reportSaveDto,@RequestPart("image") MultipartFile []image) throws Exception {
+        return new SuccesResponse(laborantService.saveReport(reportSaveDto,image[0]).toString(),true);
     }
     @PutMapping ("/updateReport")
     public Response updateReport(@RequestBody ReportDto reportDto){

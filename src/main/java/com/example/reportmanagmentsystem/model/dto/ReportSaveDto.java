@@ -1,15 +1,15 @@
 package com.example.reportmanagmentsystem.model.dto;
 
+import com.example.reportmanagmentsystem.model.Image;
 import com.example.reportmanagmentsystem.model.Laborant;
 import com.example.reportmanagmentsystem.model.Report;
+import com.example.reportmanagmentsystem.service.ImageUtil;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Base64;
 import java.util.Optional;
 
 @Getter
@@ -22,17 +22,13 @@ public class ReportSaveDto {
     private String dfnTitle;
     private String dfnDetails;
 
-    public String imagesConvertor(MultipartFile file) throws IOException{
-        String filename= StringUtils.cleanPath(file.getOriginalFilename());
-        if(filename.contains(".."))
-        {
-            System.out.println("not a a valid file");
-        }
-           return Base64.getEncoder().encodeToString(file.getBytes());
+    public byte[] imagesConvertor(MultipartFile image) throws IOException{
+        System.out.println(image.getBytes().toString());
+        return ImageUtil.compressImage(image.getBytes());
 
     }
 
-    public Report saveReportDto(ReportSaveDto reportDto, Optional<Laborant> laborant,MultipartFile file) throws Exception{
+    public Report saveReportDto(ReportSaveDto reportDto,MultipartFile image,Optional<Laborant> laborant) throws Exception{
         Report report = new Report();
         report.setLaborant(laborant.get());
         report.setAd(reportDto.getPatient_firstname());
@@ -40,7 +36,7 @@ public class ReportSaveDto {
         report.setPatient_identity_no(reportDto.getPatient_identity_no());
         report.setDfnTitle(reportDto.getDfnTitle());
         report.setDfnDetails(reportDto.getDfnDetails());
-        report.setDfnImgPath(imagesConvertor(file));
+        report.setImage(Image.builder().image_name(image.getOriginalFilename()).image_type(image.getContentType()).image_data(ImageUtil.compressImage(image.getBytes())).build());
         report.setCreate_date(LocalDateTime.now());
         return report;
     }

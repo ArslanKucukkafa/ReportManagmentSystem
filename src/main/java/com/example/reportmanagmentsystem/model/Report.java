@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import javax.persistence.*;
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 @Getter
@@ -20,25 +19,19 @@ public class Report {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "report_id")
     private Long reportId;
-
     @Column(name = "patient_name")
     private String ad;
-
     @Column(name="patient_surname")
     private String soyad;
-
     @Column(name = "patient_identity_no")
     private String patient_identity_no;
-
     @Column(name = "dfn_title")
     private String dfnTitle;
-
     @Column(name = "dfn_Details")
     private String dfnDetails;
-
-    @Lob
-    @Column(columnDefinition = "bytea")
-    private String dfnImgPath;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id")
+    private Image image;
     @ManyToOne()
     @JoinColumn(name = "laborant_id")
     private Laborant laborant;

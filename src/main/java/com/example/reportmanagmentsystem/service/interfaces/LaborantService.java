@@ -7,6 +7,7 @@ import com.example.reportmanagmentsystem.model.dto.LaborantRegisterDto;
 import com.example.reportmanagmentsystem.model.dto.ReportDto;
 import com.example.reportmanagmentsystem.model.dto.ReportSaveDto;
 import com.example.reportmanagmentsystem.model.response.Response;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;

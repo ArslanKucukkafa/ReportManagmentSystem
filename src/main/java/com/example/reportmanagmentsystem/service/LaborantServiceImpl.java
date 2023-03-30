@@ -28,9 +28,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -82,10 +84,10 @@ public Response loginLaborant(LaborantLoginDto loginDto) throws AuthenticationEx
     }
 
     @Override
-    public Response saveReport(ReportSaveDto reportSaveDto,MultipartFile file) throws Exception {
+    public Response saveReport(ReportSaveDto reportSaveDto,MultipartFile image) throws Exception {
         Optional<Laborant> laborant = getPrincipal();
         if (laborant.isPresent()){
-            reportRepository.save(reportSaveDto.saveReportDto(reportSaveDto,laborant,file));
+            reportRepository.save(reportSaveDto.saveReportDto(reportSaveDto,image,laborant));
             return new SuccesResponse("Report successfullf saved",true);
         }
         else {
@@ -117,7 +119,7 @@ public Response loginLaborant(LaborantLoginDto loginDto) throws AuthenticationEx
     public Response updateReport(ReportDto reportDto){
 
     try {
-        reportRepository.updateReport(reportDto.getDfnTitle(),reportDto.getDfnImgPath(), reportDto.getDfnDetails(),reportDto.getReportId());
+        reportRepository.updateReport(reportDto.getDfnTitle(),reportDto.getImage(), reportDto.getDfnDetails(),reportDto.getReportId());
     } catch (Exception e){
         System.out.println(e);
         System.out.println("Exception");}

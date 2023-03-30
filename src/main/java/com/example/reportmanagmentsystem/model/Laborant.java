@@ -53,4 +53,8 @@ public class Laborant {
         this.roles.add(role);
     }
 
+    public String whRole(Role role){
+        return role.getRoleName();
+    }
+
 }

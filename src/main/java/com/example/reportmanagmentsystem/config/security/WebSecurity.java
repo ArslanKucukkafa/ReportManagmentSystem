@@ -28,6 +28,7 @@ private JwtTokenFilter jwtTokenFilter;
             "/api/v1/laboratories/login",
             "/api/v1/laboratories/save",
             "/api/v1/laboratories/hello",
+            "/api/v1/admin/getAllLaboratories/true",
             "/v2/api-docs",
             "/swagger-resources",
             "/swagger-resources/**",

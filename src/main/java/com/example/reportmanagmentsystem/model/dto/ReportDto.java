@@ -18,7 +18,7 @@ public class ReportDto {
     private String patient_identity_no;
     private String dfnTitle;
     private String dfnDetails;
-    private String dfnImgPath;
+    private byte [] image;
     private LocalDateTime create_date;
 
 }

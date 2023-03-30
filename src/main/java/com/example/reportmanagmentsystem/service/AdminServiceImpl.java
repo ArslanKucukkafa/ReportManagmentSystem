@@ -50,6 +50,20 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public List<Laborant> getAllPerson(boolean activate) {
         return laborantRepository.findLaborantsByEnabledIs(activate);}
+
+    @Override
+    public HashMap<String, String> getDetailsLaborant(String laborant_id) {
+        Optional<Laborant>laborant=laborantRepository.findByLaborantId(laborant_id);
+        int reportCount= reportRepository.findByLaborantIdOrdOrderByCreate_dateAsc(laborant.get().getId()).size();
+        HashMap<String,String>map = new HashMap<>();
+        Set<Role>role=laborant.get().getRoles();
+        String rolename="";
+        for (Role r:role){rolename=r.getRoleName();}
+        map.put("reportCount", String.valueOf(reportCount));
+        map.put("role",rolename);
+        return map;
+    }
+
     public Response upgradeRole (String laborant_id){
         Role role = roleRepository.findByRoleName("ADMIN");
         Optional<Laborant> laborant = laborantRepository.findByLaborantId(laborant_id);
@@ -57,4 +71,7 @@ public class AdminServiceImpl implements AdminService {
         laborantRepository.save(laborant.get());
         return new SuccesResponse("role changed successfully",true);
     }
+
+
+
 }
