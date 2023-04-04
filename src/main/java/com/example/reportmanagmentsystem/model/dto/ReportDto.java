@@ -21,4 +21,7 @@ public class ReportDto {
     private byte [] image;
     private LocalDateTime create_date;
 
+
+
+
 }

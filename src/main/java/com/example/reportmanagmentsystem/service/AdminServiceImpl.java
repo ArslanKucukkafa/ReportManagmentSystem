@@ -3,6 +3,7 @@ package com.example.reportmanagmentsystem.service;
 import com.example.reportmanagmentsystem.model.Laborant;
 import com.example.reportmanagmentsystem.model.Report;
 import com.example.reportmanagmentsystem.model.Role;
+import com.example.reportmanagmentsystem.model.dto.DetailsDto;
 import com.example.reportmanagmentsystem.model.response.Response;
 import com.example.reportmanagmentsystem.model.response.SuccesResponse;
 import com.example.reportmanagmentsystem.repository.LaborantRepository;
@@ -10,6 +11,9 @@ import com.example.reportmanagmentsystem.repository.ReportRepository;
 import com.example.reportmanagmentsystem.repository.RoleRepository;
 import com.example.reportmanagmentsystem.service.interfaces.AdminService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -23,6 +27,8 @@ public class AdminServiceImpl implements AdminService {
     private final RoleRepository roleRepository;
     private final ReportRepository reportRepository;
 
+    private PasswordEncoder encoder;
+
     @Override
     @Transactional
     public Response laborantAccountActivate(Boolean activated, String laborant_id) {
@@ -31,10 +37,11 @@ public class AdminServiceImpl implements AdminService {
 
     @Transactional
     @Override
-    public Response deleteLaborant(String laborant_id) {
+    public Response deleteLaborant(String laborant_id){
         Optional<Laborant> laborant = laborantRepository.findByLaborantId(laborant_id);
+        Optional<Laborant> currentLaborant=getPrincipal();
         if(laborant.isPresent()){
-            laborantRepository.deleteByLaborantId(laborant_id);
+            laborantRepository.deleteByLaborantId(laborant_id,currentLaborant.get().getLaborantId());
             return new SuccesResponse("Laborant deleted successfully",true);
         }else{
             return new SuccesResponse("Laborant not avaliable ",false);
@@ -42,9 +49,9 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<Report> getAllReportsLaboratories(String laborant_id) {
-        Optional<Laborant> laborant = laborantRepository.findByLaborantId(laborant_id);
-        return reportRepository.findByLaborantIdOrdOrderByCreate_dateAsc(laborant.get().getId());
+    public List<Report> getAllReportsLaboratories(String laborant_id)  throws Exception{
+        Optional<Laborant>laborant= laborantRepository.findByLaborantId(laborant_id);
+        return reportRepository.findByAllReportWithLaborantId(laborant.get().getId());
     }
 
     @Override
@@ -52,26 +59,31 @@ public class AdminServiceImpl implements AdminService {
         return laborantRepository.findLaborantsByEnabledIs(activate);}
 
     @Override
-    public HashMap<String, String> getDetailsLaborant(String laborant_id) {
+    public DetailsDto getDetailsLaborant(String laborant_id) {
         Optional<Laborant>laborant=laborantRepository.findByLaborantId(laborant_id);
-        int reportCount= reportRepository.findByLaborantIdOrdOrderByCreate_dateAsc(laborant.get().getId()).size();
-        HashMap<String,String>map = new HashMap<>();
-        Set<Role>role=laborant.get().getRoles();
-        String rolename="";
-        for (Role r:role){rolename=r.getRoleName();}
-        map.put("reportCount", String.valueOf(reportCount));
-        map.put("role",rolename);
-        return map;
+        DetailsDto details = new DetailsDto(laborant.get(),reportRepository.reportCount(laborant.get().getId()));
+        System.out.println("---------");
+        System.out.println(details.getLaborantId()+" "+details.getAd());
+        return details;
     }
 
     public Response upgradeRole (String laborant_id){
         Role role = roleRepository.findByRoleName("ADMIN");
         Optional<Laborant> laborant = laborantRepository.findByLaborantId(laborant_id);
         laborant.get().addRole(role);
+        Role role1= roleRepository.findByRoleName("LABORANT");
+        laborant.get().getRoles().remove(role1);
         laborantRepository.save(laborant.get());
         return new SuccesResponse("role changed successfully",true);
     }
 
-
-
+    public Optional<Laborant> getPrincipal(){
+        String userName;
+        Optional<Laborant>laborant=null;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            userName = ((UserDetails)principal).getUsername();
+            laborant=laborantRepository.findByLaborantId(userName);}
+        return laborant;
+    }
 }

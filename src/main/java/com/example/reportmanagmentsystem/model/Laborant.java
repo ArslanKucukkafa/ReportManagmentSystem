@@ -21,7 +21,7 @@ public class Laborant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Long id;
 
     @Column(name = "firstname")
     private String ad;
@@ -49,12 +49,10 @@ public class Laborant {
     )
     private Set<Role> roles = new HashSet<>();
 
+    @OneToMany(mappedBy = "laborant",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<Report> report;
     public void addRole(Role role){
         this.roles.add(role);
-    }
-
-    public String whRole(Role role){
-        return role.getRoleName();
     }
 
 }

@@ -1,13 +1,16 @@
 package com.example.reportmanagmentsystem.controller;
 
 import com.example.reportmanagmentsystem.model.Laborant;
-import com.example.reportmanagmentsystem.model.Report;
+import com.example.reportmanagmentsystem.model.dto.DetailsDto;
+import com.example.reportmanagmentsystem.model.response.ErrorResponse;
 import com.example.reportmanagmentsystem.model.response.Response;
+import com.example.reportmanagmentsystem.model.response.SuccesResponse;
 import com.example.reportmanagmentsystem.service.AdminServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -20,7 +23,13 @@ public class AdminController {
     @PostMapping("/deleteLaborant")
     public Response deleteLaborant(@RequestParam String laborant_id){return adminService.deleteLaborant(laborant_id);}
     @GetMapping("/getAllReportsLaboratories")
-    public List<Report> getAllReportsLaboratories(@RequestParam String laborant_id){return adminService.getAllReportsLaboratories(laborant_id);}
+    public Response getAllReportsLaboratories(@RequestParam String laborant_id){
+        try {
+            return new SuccesResponse(adminService.getAllReportsLaboratories(laborant_id).toString(),true);
+        }catch (Exception ex){
+            return new ErrorResponse(ex.toString(),false);
+        }
+    }
 
     @GetMapping("/getAllLaboratories/{activate}")
     public List<Laborant> getAllLaboratories(@PathVariable(value ="activate") boolean activate){return adminService.getAllPerson(activate);}
@@ -40,5 +49,11 @@ public class AdminController {
     }
 
     @GetMapping("/laborantDetail")
-    public HashMap<String, String> laborantDetail(String laborant_id){return adminService.getDetailsLaborant(laborant_id);}
+    public ResponseEntity laborantDetail(String laborant_id){;
+        try {
+            return new ResponseEntity<>(adminService.getDetailsLaborant(laborant_id), HttpStatus.OK);
+        }catch (Exception ex){
+            return new ResponseEntity<>(ex,HttpStatus.BAD_REQUEST);
+        }
+    }
 }

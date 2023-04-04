@@ -4,10 +4,7 @@ import com.example.reportmanagmentsystem.config.security.JwtTokenUtil;
 import com.example.reportmanagmentsystem.model.Laborant;
 import com.example.reportmanagmentsystem.model.Report;
 import com.example.reportmanagmentsystem.model.Role;
-import com.example.reportmanagmentsystem.model.dto.LaborantLoginDto;
-import com.example.reportmanagmentsystem.model.dto.LaborantRegisterDto;
-import com.example.reportmanagmentsystem.model.dto.ReportDto;
-import com.example.reportmanagmentsystem.model.dto.ReportSaveDto;
+import com.example.reportmanagmentsystem.model.dto.*;
 import com.example.reportmanagmentsystem.model.response.ErrorResponse;
 import com.example.reportmanagmentsystem.model.response.LoginResponse;
 import com.example.reportmanagmentsystem.model.response.Response;
@@ -17,8 +14,8 @@ import com.example.reportmanagmentsystem.repository.ReportRepository;
 import com.example.reportmanagmentsystem.repository.RoleRepository;
 import com.example.reportmanagmentsystem.service.interfaces.LaborantService;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,21 +25,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class LaborantServiceImpl implements  LaborantService {
 
-private final Logger logger = LoggerFactory.getLogger(LaborantServiceImpl.class);
 @Autowired
 private final LaborantRepository laborantRepository;
 private final RoleRepository roleRepository;
@@ -51,6 +44,8 @@ private final ReportRepository reportRepository;
 private final AuthenticationManager authenticationManager;
 private final JwtTokenUtil jwtTokenUtil;
 
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Autowired
     private PasswordEncoder encoder;
@@ -94,9 +89,10 @@ public Response loginLaborant(LaborantLoginDto loginDto) throws AuthenticationEx
             return new ErrorResponse("Error is occured when to save report",false);
         }
     }
+
     @Override
     public Optional<Laborant> getPrincipal(){
-        String userName = null;
+        String userName;
         Optional<Laborant>laborant=null;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {
@@ -106,13 +102,15 @@ public Response loginLaborant(LaborantLoginDto loginDto) throws AuthenticationEx
         return laborant;
     }
     @Override
-    public List<Report> getAllReports(){
-        return reportRepository.findAll();
+    public List<ReportGetDto> getAllReports(){
+        Optional<Laborant>currentLaborant = getPrincipal();
+        return reportRepository.findByAllReportWithLaborantId(currentLaborant.get().getId()).stream().map(post ->modelMapper.map(post,ReportGetDto.class)).collect(Collectors.toList());
     }
     @Override
-    public List<Report> getAllReportsWithAboutPatient(String patient_identity_no) {
-    return reportRepository.getAllPatientReports(patient_identity_no, getPrincipal().get().getId());
+    public List<ReportGetDto> getAllReportsWithAboutPatient(String patient_identity_no) {
+    return reportRepository.getAllPatientReports(patient_identity_no, getPrincipal().get().getId()).stream().map(post ->modelMapper.map(post, ReportGetDto.class)).collect(Collectors.toList());
     }
+
 
     @Override
     @Transactional

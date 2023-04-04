@@ -3,6 +3,7 @@ package com.example.reportmanagmentsystem.config;
 import com.example.reportmanagmentsystem.repository.LaborantRepository;
 import com.example.reportmanagmentsystem.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,6 +24,10 @@ import java.util.Arrays;
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
+
+    @Bean
+    public ModelMapper modelMapper() {return new ModelMapper();
+    }
 
     @Bean
     public UserDetailsService userDetailsService() {

@@ -2,10 +2,7 @@ package com.example.reportmanagmentsystem.controller;
 
 import com.example.reportmanagmentsystem.model.Laborant;
 import com.example.reportmanagmentsystem.model.Report;
-import com.example.reportmanagmentsystem.model.dto.LaborantLoginDto;
-import com.example.reportmanagmentsystem.model.dto.LaborantRegisterDto;
-import com.example.reportmanagmentsystem.model.dto.ReportDto;
-import com.example.reportmanagmentsystem.model.dto.ReportSaveDto;
+import com.example.reportmanagmentsystem.model.dto.*;
 import com.example.reportmanagmentsystem.model.response.ErrorResponse;
 import com.example.reportmanagmentsystem.model.response.Response;
 import com.example.reportmanagmentsystem.model.response.SuccesResponse;
@@ -15,11 +12,14 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @RestController
 @RequestMapping("/api/v1/laboratories")
@@ -52,20 +52,14 @@ public class LaborantController {
         return laborantService.updateReport(reportDto);
     }
     @PostMapping("/deleteReport")
-    public Response deleteReport(@RequestParam Long report_id){ return laborantService.deleteReport(report_id);
-    }
-
+    public Response deleteReport(@RequestParam Long report_id){ return laborantService.deleteReport(report_id);}
     @GetMapping("/getAllReports")
-    public List<Report> getAllReports(){ return laborantService.getAllReports();}
+    public List<ReportGetDto> getAllReports(){ return laborantService.getAllReports();}
 
     @GetMapping("/getAllPatientReports")
-    public List<Report> getPatinetReports(@RequestParam String patient_identity_no){
-        return laborantService.getAllReportsWithAboutPatient(patient_identity_no);
-    }
-    @GetMapping("/hello")
-    public String hello(){
-        return "Hello";
-    }
+    public List<ReportGetDto> getPatinetReports(@RequestParam String patient_identity_no){
+        return laborantService.getAllReportsWithAboutPatient(patient_identity_no);}
+
 
     @GetMapping("/currentUser")
     public Optional<Laborant> currentUser(){
