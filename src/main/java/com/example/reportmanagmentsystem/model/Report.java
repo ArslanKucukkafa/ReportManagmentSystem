@@ -2,11 +2,14 @@ package com.example.reportmanagmentsystem.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.Set;
+import java.util.HashSet;
 import java.time.LocalDateTime;
 
 @Getter
@@ -31,8 +34,7 @@ public class Report {
     private String dfnTitle;
     @Column(name = "dfn_Details")
     private String dfnDetails;
-    @Column(name = "image_data")
-    private byte [] image;
+
     @ManyToOne
     @JsonIgnore
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -40,4 +42,14 @@ public class Report {
     private Laborant laborant;
     @Column(name = "create_date")
     private LocalDateTime create_date;
+
+    // create set object for image with OneToMany
+    @OneToOne (cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "report_images",
+            joinColumns = @JoinColumn(name = "report_id"),
+            inverseJoinColumns = @JoinColumn(name = "image_id")
+    )
+    private Image image;
+
 }

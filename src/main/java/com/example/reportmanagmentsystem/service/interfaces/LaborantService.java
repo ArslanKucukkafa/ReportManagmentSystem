@@ -17,7 +17,9 @@ public interface LaborantService {
 
     Response saveReport(ReportSaveDto reportSaveDto,MultipartFile file) throws Exception;
 
-    List<ReportGetDto> getAllReportsWithAboutPatient(String patient_identity_no);
+    List<Report> getAllReportsWithAboutPatient(String patient_identity_no);
+
+    Report getReport(Long reportId);
 
     Response updateReport(ReportDto reportDto);
     Optional<Laborant> getPrincipal();

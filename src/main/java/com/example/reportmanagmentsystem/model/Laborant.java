@@ -49,8 +49,6 @@ public class Laborant {
     )
     private Set<Role> roles = new HashSet<>();
 
-    @OneToMany(mappedBy = "laborant",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private List<Report> report;
     public void addRole(Role role){
         this.roles.add(role);
     }

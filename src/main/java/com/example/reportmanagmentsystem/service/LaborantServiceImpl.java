@@ -27,7 +27,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -107,8 +106,17 @@ public Response loginLaborant(LaborantLoginDto loginDto) throws AuthenticationEx
         return reportRepository.findByAllReportWithLaborantId(currentLaborant.get().getId()).stream().map(post ->modelMapper.map(post,ReportGetDto.class)).collect(Collectors.toList());
     }
     @Override
-    public List<ReportGetDto> getAllReportsWithAboutPatient(String patient_identity_no) {
-    return reportRepository.getAllPatientReports(patient_identity_no, getPrincipal().get().getId()).stream().map(post ->modelMapper.map(post, ReportGetDto.class)).collect(Collectors.toList());
+    public List<Report> getAllReportsWithAboutPatient(String patient_identity_no) {
+    return reportRepository.getAllPatientReports(patient_identity_no, getPrincipal().get().getId());
+    }
+
+
+    @Override
+    public Report getReport(Long reportId){
+        Optional<Laborant> currentLaborant= getPrincipal();
+        Optional<Report> report = reportRepository.findByIdAndLaborant_Id(reportId,currentLaborant.get().getId());
+        report.get().getImage().setData(ImageUtil.decompressImage(report.get().getImage().getData()));
+        return report.get();
     }
 
 

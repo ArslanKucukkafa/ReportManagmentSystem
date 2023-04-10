@@ -1,5 +1,6 @@
 package com.example.reportmanagmentsystem.model.dto;
 
+import com.example.reportmanagmentsystem.model.Image;
 import com.example.reportmanagmentsystem.model.Laborant;
 import com.example.reportmanagmentsystem.model.Report;
 import com.example.reportmanagmentsystem.service.ImageUtil;
@@ -22,7 +23,7 @@ public class ReportSaveDto {
 
 
 
-    public Report saveReportDto(ReportSaveDto reportDto,MultipartFile image,Optional<Laborant> laborant) throws Exception{
+    public Report saveReportDto(ReportSaveDto reportDto, MultipartFile image, Optional<Laborant> laborant) throws Exception{
         Report report = new Report();
         report.setLaborant(laborant.get());
         report.setPatient_firstname(reportDto.getPatient_firstname());
@@ -30,7 +31,7 @@ public class ReportSaveDto {
         report.setPatient_identity_no(reportDto.getPatient_identity_no());
         report.setDfnTitle(reportDto.getDfnTitle());
         report.setDfnDetails(reportDto.getDfnDetails());
-        report.setImage(ImageUtil.compressImage(image.getBytes()));
+        report.setImage(Image.createImage(image));
         report.setCreate_date(LocalDateTime.now());
         return report;
     }
