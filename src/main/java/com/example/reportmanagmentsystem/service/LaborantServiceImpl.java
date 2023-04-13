@@ -1,6 +1,7 @@
 package com.example.reportmanagmentsystem.service;
 
 import com.example.reportmanagmentsystem.config.security.JwtTokenUtil;
+import com.example.reportmanagmentsystem.model.Image;
 import com.example.reportmanagmentsystem.model.Laborant;
 import com.example.reportmanagmentsystem.model.Report;
 import com.example.reportmanagmentsystem.model.Role;
@@ -28,6 +29,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -59,10 +62,9 @@ public void registerLaborant(LaborantRegisterDto registerDto){
         laborant.getRoles().add(role);
         System.out.println(registerDto.getPassword());
         laborantRepository.save(laborant);
+        }
     }
 
-
-    }
 @Override
 public Response loginLaborant(LaborantLoginDto loginDto) throws AuthenticationException {
     Authentication  authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getLaborant_id(),loginDto.getPassword()));
@@ -70,7 +72,6 @@ public Response loginLaborant(LaborantLoginDto loginDto) throws AuthenticationEx
     if(isConfirmed.isPresent()){
         List<Role>roles=new ArrayList<Role>(isConfirmed.get().getRoles());
         String token = jwtTokenUtil.generateToken(authentication);
-        System.out.println(isConfirmed.get().getRoles());
         return new LoginResponse(token,roles.get(0).getRoleName(),true);
     }
     else {
@@ -122,15 +123,16 @@ public Response loginLaborant(LaborantLoginDto loginDto) throws AuthenticationEx
 
     @Override
     @Transactional
-    public Response updateReport(ReportDto reportDto){
+    public Response updateReport(ReportGetDto reportGetDto,MultipartFile file) throws IOException {
 
+    Image image =  Image.createImage(file);
     try {
-        reportRepository.updateReport(reportDto.getDfnTitle(),reportDto.getImage(), reportDto.getDfnDetails(),reportDto.getReportId());
-    } catch (Exception e){
-        System.out.println(e);
-        System.out.println("Exception");}
-        return new SuccesResponse("Update processing is sucessfully",true);
-    }
+        Report report = new Report(reportGetDto.getReportId(),reportGetDto.getPatient_firstname(),reportGetDto.getPatient_lastname(),reportGetDto.getPatient_identity_no(),reportGetDto.getDfnTitle(),reportGetDto.getDfnDetails(),getPrincipal().get(), LocalDateTime.now(),image);
+        reportRepository.save(report);}
+    catch (Exception e)
+    {System.out.println(e);}
+    return new SuccesResponse("Update processing is sucessfully",true);}
+
 
     @Override
     @Transactional

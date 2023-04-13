@@ -26,6 +26,7 @@ public class Image {
     @Column(name = "data")
     private byte []data;
 
+
     // create method retun Image object with all variables and input parameters MultiPartFile object
     public static Image createImage(MultipartFile file) throws IOException {
         Image image = new Image();

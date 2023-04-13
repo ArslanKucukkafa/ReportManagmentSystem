@@ -4,7 +4,6 @@ import com.example.reportmanagmentsystem.model.Laborant;
 import com.example.reportmanagmentsystem.model.Report;
 import com.example.reportmanagmentsystem.model.dto.*;
 import com.example.reportmanagmentsystem.model.response.Response;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -21,7 +20,7 @@ public interface LaborantService {
 
     Report getReport(Long reportId);
 
-    Response updateReport(ReportDto reportDto);
+    Response updateReport(ReportGetDto reportGetDto,MultipartFile file) throws Exception;
     Optional<Laborant> getPrincipal();
 
     List<ReportGetDto> getAllReports();

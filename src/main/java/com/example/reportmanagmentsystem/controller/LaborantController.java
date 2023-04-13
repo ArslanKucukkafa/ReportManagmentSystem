@@ -41,12 +41,13 @@ public class LaborantController {
     public Response saveReport(@RequestPart("reportSaveDto") ReportSaveDto reportSaveDto,@RequestPart("image") MultipartFile []image) throws Exception {
         return new SuccesResponse(laborantService.saveReport(reportSaveDto,image[0]).toString(),true);
     }
-    @PutMapping ("/updateReport")
-    public Response updateReport(@RequestBody ReportDto reportDto){
-        return laborantService.updateReport(reportDto);
+    @PutMapping (value = {"/updateReport"},consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public Response updateReport(@RequestPart("ReportGetDto") ReportGetDto reportGetDto,@RequestPart("image") MultipartFile []image) throws Exception {
+        return laborantService.updateReport(reportGetDto,image[0]);
     }
     @PostMapping("/deleteReport")
-    public Response deleteReport(@RequestParam Long report_id){ return laborantService.deleteReport(report_id);}
+    public Response deleteReport(@RequestParam Long report_id){
+        return laborantService.deleteReport(report_id);}
     @GetMapping("/getAllReports")
     public List<ReportGetDto> getAllReports(){ return laborantService.getAllReports();}
 

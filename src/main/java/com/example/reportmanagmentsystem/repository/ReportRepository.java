@@ -18,12 +18,11 @@ public interface ReportRepository extends JpaRepository<Report,Long> {
     Optional<Report> findByIdAndLaborant_Id(Long report_id,Long laborant_id);
 
     @Modifying
-    @Query("update Report r set r.dfnTitle = ?1,r.image = ?2, r.dfnDetails = ?3 where r.reportId = ?4")
-    void updateReport(String dfn_title, Image image, String dfn_details, Long report_id);
+    @Query("update Report r set r.dfnTitle = ?1 , r.image.data=?2,r.image.image_type=?3, r.dfnDetails = ?4 where r.reportId = ?5")
+    void updateReport(String dfn_title,byte[] data,String image_type, String dfn_details, Long report_id);
     @Query("SELECT COUNT(r) FROM Report r WHERE r.laborant.id =?1")
     Integer reportCount(Long id);
-    /*    @Query("SELECT r FROM Report r WHERE r.patient_identity_no=?1 and r.laborant.id=?2")
-    void getAllPatientReports1(String patient_identity_no,Integer laborant_id);*/
+
     @Query("SELECT l from Report l Where l.patient_identity_no = :patient_identity_no and l.laborant.id= :laborant_id")
     List<Report> getAllPatientReports(@Param("patient_identity_no") String patient_identity_no, @Param("laborant_id")Long laborant_id);
 
@@ -31,4 +30,10 @@ public interface ReportRepository extends JpaRepository<Report,Long> {
     List<Report> findByAllReportWithLaborantId(Long laborant_id);
 
     void deleteByReportIdAndLaborantId(Long report_id,Long laborant_id);
+
+    //create method update Report with image but input variable ReportGetDto
+    @Modifying
+    @Query("update Report r set r.dfnTitle = :#{#report.dfnTitle} , r.image.data=:#{#report.image.data},r.image.image_type=:#{#report.image.image_type}, r.dfnDetails = :#{#report.dfnDetails} where r.reportId = :#{#report.reportId}")
+    void updateReportWithImage(@Param("report") Report report);
+
 }

@@ -1,6 +1,7 @@
 package com.example.reportmanagmentsystem.model;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -40,16 +41,13 @@ public class Report {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "laborant_id",nullable = false)
     private Laborant laborant;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @Column(name = "create_date")
     private LocalDateTime create_date;
 
     // create set object for image with OneToMany
-    @OneToOne (cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "report_images",
-            joinColumns = @JoinColumn(name = "report_id"),
-            inverseJoinColumns = @JoinColumn(name = "image_id")
-    )
+    @OneToOne (cascade = CascadeType.ALL ,fetch = FetchType.EAGER,orphanRemoval = true)
+    @JoinColumn(name = "image_id")
     private Image image;
 
 }

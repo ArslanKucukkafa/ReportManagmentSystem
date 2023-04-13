@@ -10,62 +10,77 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 
 @EnableWebSecurity
 @Configuration
 @RequiredArgsConstructor
 public class WebSecurity {
-
 @Autowired
 private final AuthenticationProvider authenticationProvider;
 
-/*.antMatchers(HttpMethod.GET,"/api/v1/laboratories/hello")
-                .hasRole("LABORANT")*/
 @Autowired
 private JwtTokenFilter jwtTokenFilter;
     private static final String[] LaborantControllerEndpoints = {
-            "/api/v1/laboratories/login",
-            "/api/v1/laboratories/save",
-            "/api/v1/laboratories/hello",
-            "/api/v1/admin/getAllLaboratories/true",
-            "/api/v1/admin/deleteLaborant",
             "/v2/api-docs",
             "/swagger-resources",
             "/swagger-resources/**",
             "/swagger-ui.html",
             "/v3/api-docs/**",
             "/swagger-ui/**",
-            "/api/v1/admin/**",
-            "/api/v1/laboratories/**",
-            "/api/v1/**"
+            "/api/v1/laboratories/updateReport/**",
+            "/api/v1/laboratories/saveReport/**",
+            "/api/v1/laboratories/saveReport",
+            "/api/v1/laboratories/deleteReport/**",
+            "/api/v1/laboratories/getReport/**",
+            "/api/v1/laboratories/getAllReports/**",
+            "/api/v1/laboratories/getAllPatientReports/**",
+            "/api/v1/laboratories/currentUser"
+    };
+    private static final String[] AdminControllerEndpoints = {
+            "/v2/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/swagger-ui.html",
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/api/v1/admin/**"
+    };
+    private static final String[] LogRegisterControllerEndpoints = {
+        "/api/v1/laboratories/save",
+        "/api/v1/laboratories/login"
+
     };
 
 
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedOriginPatterns(Collections.singletonList("*"));
+        configuration.setAllowedMethods(Arrays.asList("*"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity)throws Exception{
 
-        httpSecurity
-                .csrf()
-                .disable()
-                .authorizeHttpRequests()
-                .antMatchers(LaborantControllerEndpoints)
-                .permitAll()
-                .anyRequest()
-                .authenticated()
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
-
-       /* httpSecurity.cors().and().csrf().disable().authorizeRequests()
-                .antMatchers(LaborantControllerEndpoints).permitAll().anyRequest().authenticated()
-                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        httpSecurity.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);*/
+        httpSecurity.cors().and().csrf().disable().authorizeRequests().antMatchers(LaborantControllerEndpoints).hasAuthority("LABORANT");
+        httpSecurity.authorizeRequests().antMatchers(AdminControllerEndpoints).hasAuthority("ADMIN");
+        httpSecurity.cors().and().csrf().disable().authorizeRequests().antMatchers(LogRegisterControllerEndpoints).permitAll()
+                .anyRequest().authenticated().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        httpSecurity.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
 }

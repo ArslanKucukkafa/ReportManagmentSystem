@@ -50,9 +50,5 @@ public boolean tokenValidate(String token){
         return true;
     }
     return false;
-}
-
-    //TODO Jwt token filter yazılcak
-    //TODO Service login token create edilip yollanacak
-
+    }
 }
