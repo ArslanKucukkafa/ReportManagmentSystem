@@ -1,34 +1,20 @@
-version: '3.9'
+version: '3'
+
 services:
-  backend-app:
-    container_name: backend-code
-    image: backend-code
+  app:
+    image: 'backend'
     build: ../
+    container_name: backend
     ports:
       - "8080:8080"
     depends_on:
-      - postgresqldb
-    environment:
-      - POSTGRES_DB=hospitalReport_db
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=1234567890
-  postgresqldb:
-    image: postgres:9.5
-    restart: always
-    container_name: postgresqldb
+      - db
+  db:
+    image: 'postgres:13.1-alpine'
+    container_name: db
     ports:
-      - "5432:5432"
+      - "5440:5432"
     environment:
-      - POSTGRES_DB=hospitalReport_db
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=1234567890
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-
-
-
-
-
-
+      - POSTGRES_DB=hospitalReport_db
