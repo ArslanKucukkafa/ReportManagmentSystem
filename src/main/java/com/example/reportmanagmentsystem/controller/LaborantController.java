@@ -3,7 +3,6 @@ package com.example.reportmanagmentsystem.controller;
 import com.example.reportmanagmentsystem.model.Laborant;
 import com.example.reportmanagmentsystem.model.Report;
 import com.example.reportmanagmentsystem.model.dto.*;
-import com.example.reportmanagmentsystem.model.response.ErrorResponse;
 import com.example.reportmanagmentsystem.model.response.Response;
 import com.example.reportmanagmentsystem.model.response.SuccesResponse;
 import com.example.reportmanagmentsystem.service.LaborantServiceImpl;
@@ -25,12 +24,7 @@ public class LaborantController {
 
     @PostMapping("/save")
     public Response saveLaborant(@RequestBody LaborantRegisterDto registerDto) {
-        try {
-            laborantService.registerLaborant(registerDto);
-            return new SuccesResponse("Kayıt işlemi başarılı",true);
-        }catch (Exception e){
-            return new ErrorResponse("Kayıt işlemi sırasında hata oluştu",false);
-        }
+    return laborantService.registerLaborant(registerDto);
     }
     @PostMapping("/login")
     public Response loginLaborant(@RequestBody LaborantLoginDto loginDto){

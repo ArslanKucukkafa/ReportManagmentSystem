@@ -1,13 +1,11 @@
 package com.example.reportmanagmentsystem.model;
 
 import com.example.reportmanagmentsystem.service.ImageUtil;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import java.io.IOException;
-import java.util.Set;
 
 @Entity(name = "Image")
 @AllArgsConstructor

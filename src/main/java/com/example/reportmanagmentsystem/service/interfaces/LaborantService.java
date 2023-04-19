@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface LaborantService {
 
-    void registerLaborant(LaborantRegisterDto registerDto);
+    Response registerLaborant(LaborantRegisterDto registerDto);
      Response loginLaborant(LaborantLoginDto loginDto);
 
     Response saveReport(ReportSaveDto reportSaveDto,MultipartFile file) throws Exception;

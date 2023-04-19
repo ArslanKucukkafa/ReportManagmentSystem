@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -16,25 +15,19 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 
 @EnableWebSecurity
 @Configuration
 @RequiredArgsConstructor
 public class WebSecurity {
-@Autowired
-private final AuthenticationProvider authenticationProvider;
 
-@Autowired
-private JwtTokenFilter jwtTokenFilter;
+
+    @Autowired
+    JwtTokenFilter jwtTokenFilter;
+
+
     private static final String[] LaborantControllerEndpoints = {
-            "/v2/api-docs",
-            "/swagger-resources",
-            "/swagger-resources/**",
-            "/swagger-ui.html",
-            "/v3/api-docs/**",
-            "/swagger-ui/**",
             "/api/v1/laboratories/updateReport/**",
             "/api/v1/laboratories/saveReport/**",
             "/api/v1/laboratories/saveReport",
@@ -54,8 +47,14 @@ private JwtTokenFilter jwtTokenFilter;
             "/api/v1/admin/**"
     };
     private static final String[] LogRegisterControllerEndpoints = {
-        "/api/v1/laboratories/save",
-        "/api/v1/laboratories/login"
+            "/v2/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/swagger-ui.html",
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/api/v1/laboratories/save",
+            "/api/v1/laboratories/login"
 
     };
 
@@ -75,7 +74,6 @@ private JwtTokenFilter jwtTokenFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity)throws Exception{
-
         httpSecurity.cors().and().csrf().disable().authorizeRequests().antMatchers(LaborantControllerEndpoints).hasAuthority("LABORANT");
         httpSecurity.authorizeRequests().antMatchers(AdminControllerEndpoints).hasAuthority("ADMIN");
         httpSecurity.cors().and().csrf().disable().authorizeRequests().antMatchers(LogRegisterControllerEndpoints).permitAll()

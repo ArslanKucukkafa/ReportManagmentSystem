@@ -1,7 +1,6 @@
 package com.example.reportmanagmentsystem.controller;
 
 import com.example.reportmanagmentsystem.model.Laborant;
-import com.example.reportmanagmentsystem.model.dto.DetailsDto;
 import com.example.reportmanagmentsystem.model.response.ErrorResponse;
 import com.example.reportmanagmentsystem.model.response.Response;
 import com.example.reportmanagmentsystem.model.response.SuccesResponse;
@@ -19,7 +18,6 @@ import java.util.List;
 public class AdminController {
     @Autowired
     private AdminServiceImpl adminService;
-
     @PostMapping("/deleteLaborant")
     public Response deleteLaborant(@RequestParam String laborant_id){return adminService.deleteLaborant(laborant_id);}
     @GetMapping("/getAllReportsLaboratories")

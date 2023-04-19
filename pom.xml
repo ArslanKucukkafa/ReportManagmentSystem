@@ -11,7 +11,7 @@
     <groupId>com.example</groupId>
     <artifactId>ReportManagmentSystem</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>ReportManagmentSystem</name>
+    <name>report</name>
     <description>ReportManagmentSystem</description>
     <properties>
         <java.version>17</java.version>
@@ -99,7 +99,5 @@
                 </configuration>
             </plugin>
         </plugins>
-        <finalName>app</finalName>
     </build>
-
 </project>

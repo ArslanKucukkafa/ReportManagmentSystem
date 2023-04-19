@@ -52,30 +52,39 @@ private final JwtTokenUtil jwtTokenUtil;
     @Autowired
     private PasswordEncoder encoder;
 @Override
-public void registerLaborant(LaborantRegisterDto registerDto){
-    if(laborantRepository.findByLaborantId(registerDto.getLaborant_id()).isPresent()){
-    }else{
-        registerDto.setPassword(encoder.encode(registerDto.getPassword()));
-        Laborant laborant = registerDto.registerLaborantDto(registerDto);
-        Role role = roleRepository.findByRoleName("LABORANT");
-        laborant.setRoles(new HashSet<>());
-        laborant.getRoles().add(role);
-        System.out.println(registerDto.getPassword());
-        laborantRepository.save(laborant);
+public Response registerLaborant(LaborantRegisterDto registerDto){
+    try {
+        if(laborantRepository.findByLaborantId(registerDto.getLaborant_id()).isPresent()){
+            return new SuccesResponse("Kullanıcı ıd zaten mevcut",false);
         }
+        else{
+            registerDto.setPassword(encoder.encode(registerDto.getPassword()));
+            Laborant laborant = registerDto.registerLaborantDto(registerDto);
+            Role role = roleRepository.findByRoleName("LABORANT");
+            laborant.setRoles(new HashSet<>());
+            laborant.getRoles().add(role);
+            System.out.println(registerDto.getPassword());
+            laborantRepository.save(laborant);
+            return new SuccesResponse("Kayıt işlemi başarılı",true);
+        }
+    }catch (Exception e){
+        return new ErrorResponse(e.toString(),false);
     }
+}
 
 @Override
 public Response loginLaborant(LaborantLoginDto loginDto) throws AuthenticationException {
-    Authentication  authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getLaborant_id(),loginDto.getPassword()));
-    Optional<Laborant> isConfirmed = laborantRepository.findByLaborantId(loginDto.getLaborant_id());
-    if(isConfirmed.isPresent()){
+    try{
+        Authentication  authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getLaborant_id(),loginDto.getPassword()));
+        Optional<Laborant> isConfirmed = laborantRepository.findByLaborantId(loginDto.getLaborant_id());
         List<Role>roles=new ArrayList<Role>(isConfirmed.get().getRoles());
         String token = jwtTokenUtil.generateToken(authentication);
         return new LoginResponse(token,roles.get(0).getRoleName(),true);
+    }catch (Exception e){
+        return new ErrorResponse(e.toString(),false);
     }
-    else {
-        return new ErrorResponse("Invalid password or laborant ıd",false);}
+
+
     }
 
     @Override

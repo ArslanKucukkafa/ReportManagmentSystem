@@ -1,6 +1,5 @@
 package com.example.reportmanagmentsystem.model.dto;
 
-import com.example.reportmanagmentsystem.model.Image;
 import com.example.reportmanagmentsystem.model.Report;
 import lombok.AllArgsConstructor;
 import lombok.Data;

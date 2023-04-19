@@ -3,9 +3,6 @@ package com.example.reportmanagmentsystem.model.dto;
 import com.example.reportmanagmentsystem.model.Laborant;
 import com.example.reportmanagmentsystem.model.Role;
 import lombok.Data;
-
-import java.util.Set;
-
 @Data
 public class DetailsDto {
 

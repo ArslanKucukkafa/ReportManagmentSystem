@@ -3,7 +3,6 @@ package com.example.reportmanagmentsystem.model.dto;
 import com.example.reportmanagmentsystem.model.Image;
 import com.example.reportmanagmentsystem.model.Laborant;
 import com.example.reportmanagmentsystem.model.Report;
-import com.example.reportmanagmentsystem.service.ImageUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;

@@ -2,9 +2,6 @@ package com.example.reportmanagmentsystem.config.security;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -21,7 +18,6 @@ import java.util.Date;
 @Service
 public class JwtTokenUtil implements Serializable {
 
-    private static final Logger logger = LoggerFactory.getLogger(JwtTokenUtil.class);
 
     private final String secret;
     private final long tokenValidty;
@@ -32,12 +28,11 @@ public class JwtTokenUtil implements Serializable {
     }
 
     public String generateToken(Authentication authentication){
-        String token = Jwts.builder().setSubject(authentication.getName()).setExpiration(
+        return Jwts.builder().setSubject(authentication.getName()).setExpiration(
                 new Date(System.currentTimeMillis()+1000*tokenValidty)).
                 setIssuer("Arslan19")
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .signWith(SignatureAlgorithm.HS256,secret).compact();
-        return token;
     }
 
 public String getUsernameFromToken(String token){
