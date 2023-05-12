@@ -55,7 +55,7 @@ private final JwtTokenUtil jwtTokenUtil;
 public Response registerLaborant(LaborantRegisterDto registerDto){
     try {
         if(laborantRepository.findByLaborantId(registerDto.getLaborant_id()).isPresent()){
-            return new SuccesResponse("Kullanıcı ıd zaten mevcut",false);
+            return new ErrorResponse("Kullanıcı ıd zaten mevcut",false);
         }
         else{
             registerDto.setPassword(encoder.encode(registerDto.getPassword()));
@@ -83,10 +83,7 @@ public Response loginLaborant(LaborantLoginDto loginDto) throws AuthenticationEx
     }catch (Exception e){
         return new ErrorResponse(e.toString(),false);
     }
-
-
-    }
-
+}
     @Override
     public Response saveReport(ReportSaveDto reportSaveDto,MultipartFile image) throws Exception {
         Optional<Laborant> laborant = getPrincipal();
@@ -137,16 +134,23 @@ public Response loginLaborant(LaborantLoginDto loginDto) throws AuthenticationEx
     Image image =  Image.createImage(file);
     try {
         Report report = new Report(reportGetDto.getReportId(),reportGetDto.getPatient_firstname(),reportGetDto.getPatient_lastname(),reportGetDto.getPatient_identity_no(),reportGetDto.getDfnTitle(),reportGetDto.getDfnDetails(),getPrincipal().get(), LocalDateTime.now(),image);
-        reportRepository.save(report);}
+        reportRepository.save(report);
+        return new SuccesResponse("Update processing is sucessfully",true);
+    }
     catch (Exception e)
-    {System.out.println(e);}
-    return new SuccesResponse("Update processing is sucessfully",true);}
+    {return new ErrorResponse(e.toString(),false);}
+}
 
 
     @Override
     @Transactional
     public Response deleteReport(Long report_id){
+    try{
         reportRepository.deleteByReportIdAndLaborantId(report_id,getPrincipal().get().getId());
         return new SuccesResponse("Report deleted successfully",true);
+    }catch (Exception e){
+        return new ErrorResponse(e.toString(),false);
+    }
+
     }
 }

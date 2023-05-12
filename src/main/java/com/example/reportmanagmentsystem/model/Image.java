@@ -30,7 +30,7 @@ public class Image {
         Image image = new Image();
         image.setImage_name(file.getOriginalFilename());
         image.setImage_type(file.getContentType());
-        image.setData(ImageUtil.compressImage(file.getBytes()));
+        image.setData(ImageUtil.compressImage(file.getBytes()));//Image Util remove
         return image;
     }
 

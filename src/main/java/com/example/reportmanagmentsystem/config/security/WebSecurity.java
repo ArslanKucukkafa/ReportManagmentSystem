@@ -44,7 +44,7 @@ public class WebSecurity {
             "/swagger-ui.html",
             "/v3/api-docs/**",
             "/swagger-ui/**",
-            "/api/v1/admin/**"
+            "/api/v1/admin/**",
     };
     private static final String[] LogRegisterControllerEndpoints = {
             "/v2/api-docs",

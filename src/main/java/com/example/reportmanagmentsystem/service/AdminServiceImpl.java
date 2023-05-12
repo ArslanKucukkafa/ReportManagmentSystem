@@ -4,6 +4,7 @@ import com.example.reportmanagmentsystem.model.Laborant;
 import com.example.reportmanagmentsystem.model.Report;
 import com.example.reportmanagmentsystem.model.Role;
 import com.example.reportmanagmentsystem.model.dto.DetailsDto;
+import com.example.reportmanagmentsystem.model.response.ErrorResponse;
 import com.example.reportmanagmentsystem.model.response.Response;
 import com.example.reportmanagmentsystem.model.response.SuccesResponse;
 import com.example.reportmanagmentsystem.repository.LaborantRepository;
@@ -68,13 +69,17 @@ public class AdminServiceImpl implements AdminService {
     }
 
     public Response upgradeRole (String laborant_id){
-        Role role = roleRepository.findByRoleName("ADMIN");
-        Optional<Laborant> laborant = laborantRepository.findByLaborantId(laborant_id);
-        laborant.get().addRole(role);
-        Role role1= roleRepository.findByRoleName("LABORANT");
-        laborant.get().getRoles().remove(role1);
-        laborantRepository.save(laborant.get());
-        return new SuccesResponse("role changed successfully",true);
+try {
+    Role role = roleRepository.findByRoleName("ADMIN");
+    Optional<Laborant> laborant = laborantRepository.findByLaborantId(laborant_id);
+    laborant.get().addRole(role);
+    Role role1= roleRepository.findByRoleName("LABORANT");
+    laborant.get().getRoles().remove(role1);
+    laborantRepository.save(laborant.get());
+    return new SuccesResponse("role changed successfully",true);
+}catch (Exception e){
+    return new ErrorResponse(e.toString(),false);
+}
     }
 
     public Optional<Laborant> getPrincipal(){
